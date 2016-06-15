@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.velocity.VelocityConfigurer;
 
 import net.otterbase.oframework.OFContext;
 import net.otterbase.oframework.annotation.ViewHelper;
-import net.otterbase.oframework.views.VelocityMultipleLayoutViewResolver;
+import net.otterbase.oframework.views.VelocityMLViewResolver;
 import net.otterbase.oframework.views.VelocityToolboxView;
 import net.otterbase.oframework.views.helper.VUHtmlTag;
 import net.otterbase.oframework.views.helper.VUSecurity;
@@ -79,7 +79,7 @@ public class SpringVelocityConfig implements ApplicationContextAware {
 	@Bean
 	public ViewResolver viewResolver() {
 
-		VelocityMultipleLayoutViewResolver resolver = new VelocityMultipleLayoutViewResolver();
+		VelocityMLViewResolver resolver = new VelocityMLViewResolver();
 		resolver.setCache(true);
 		resolver.setSuffix(".vm");
 		resolver.setContentType("text/html; charset=UTF-8");

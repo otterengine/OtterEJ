@@ -10,10 +10,10 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.velocity.VelocityLayoutView;
 import org.springframework.web.servlet.view.velocity.VelocityViewResolver;
 
-public class VelocityMultipleLayoutViewResolver extends VelocityViewResolver {
+public class VelocityMLViewResolver extends VelocityViewResolver {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(VelocityMultipleLayoutViewResolver.class);
+			.getLogger(VelocityMLViewResolver.class);
 
 	private Map<String, String> mappings = new HashMap<String, String>();
 
