@@ -24,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import net.otterbase.oframework.OFContext;
 import net.otterbase.oframework.base.OFInterceptor;
 import net.otterbase.oframework.common.interceptor.RequestInterceptor;
+import net.otterbase.oframework.file.AttachFileContext;
 
 @Configuration
 @EnableWebMvc
@@ -31,6 +32,11 @@ import net.otterbase.oframework.common.interceptor.RequestInterceptor;
 @ComponentScan(basePackages = "${webapp.package}")
 @Import(value = { SpringVelocityConfig.class })
 public class MvcConfig extends WebMvcConfigurerAdapter {
+	
+	@Bean
+	public AttachFileContext fileContext() {
+		return new AttachFileContext();
+	}
 
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
