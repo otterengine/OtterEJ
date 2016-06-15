@@ -1,14 +1,33 @@
 ## OtterEJ – Otter Engine in Java
 
-*OtterEngine* is a light-weight Website frameworks, released under a Modified BSD licence.
 
-현재 자바버전은 다음 모듈을 사용합니다.
+현재 OtterEngine in Java는 다음 모듈을 사용합니다.
 - SpringFramework 4.x
 - Hibernate 5.x
 - Velocity 2.x
 
 
 ## Quickstart
+
+현재 프레임워크를 사용하려면 아래와 같은 추가옵션이 필요합니다.
+기본적으로 Maven WebProject 기반으로 작동합니다.
+
+*/pom.xml*
+
+	<repository>
+		<id>reconers</id>
+		<name>Reconers</name>
+		<url>http://mvn.reconers.com/content/repositories/mlib/</url>
+	</repository>
+	
+	...
+
+	<dependency>
+		<groupId>net.otterbase</groupId>
+		<artifactId>OFramework</artifactId>
+		<version>1.0.0</version>
+	</dependency>
+
 
 */src/main/resource/rsengine.properties*
 	
