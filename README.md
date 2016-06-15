@@ -35,7 +35,7 @@
 	</dependency>
 
 
-*/src/main/resource/rsengine.properties*
+*/src/main/resource/otter.properties*
 	
 	webapp.site_name={ Site Name }
 	webapp.site_web_url={ Site Http URL }
