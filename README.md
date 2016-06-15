@@ -2,12 +2,50 @@
 
 *OtterEngine* is a light-weight Website frameworks, released under a Modified BSD licence.
 
+현재 자바버전은 다음 모듈을 사용합니다.
+- SpringFramework 4.x
+- Hibernate 5.x
+- Velocity 2.x
+
 
 ## Quickstart
 
+*/src/main/resource/rsengine.properties*
+	
+	webapp.site_name={ Site Name }
+	webapp.site_web_url={ Site Http URL }
+	webapp.site_ssl_url={ Site Https URL }
+	
+	webapp.package={ Web Application Main Package }
+	
+	webapp.mail.smtp.host={ SMTP Host }
+	webapp.mail.smtp.port={ SMTP Port }
+	webapp.mail.smtp.auth={ SMTP Authorize? true / false }
+	webapp.mail.smtp.starttls.enable={Start TLS Enable}
+	webapp.mail.username={ SMTP ID }
+	webapp.mail.password={ SMTP Password }
+	
+	webapp.db.package={ Hibernate Entity Package }
+	webapp.db.jdbc_url={ JDBC URL }
+	webapp.db.username={ JDBC ID }
+	webapp.db.password={ JDBC Password }
+	
+	hibernate.show_sql=false
+	
+	hibernate.connection.driver_class=com.mysql.jdbc.Driver
+	hibernate.connection.useUnicode=true
+	hibernate.connection.characterEncoding=utf-8
+	
+	hibernate.dialect=org.hibernate.dialect.MySQLDialect
+	
+	hibernate.current_session_context_class=thread
+	hibernate.cache.use_second_level_cache=true
+	hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
+	hibernate.cache.use_query_cache=true
+	hibernate.query.substitutions=true 1,false 0
+	
 
-*web.xml*
-자바 웹 프로젝트 내에 web.xml에 해당 내용을 먼저 삽입합니다.
+*/WEB-INF/web.xml*
 
 	<filter>
 		<filter-name>encodingFilter</filter-name>
