@@ -148,6 +148,7 @@
 
 - **/views/shared/layout.default.vm** 레이아웃 기본 파일입니다. 
 
+##
 	<html>
 		<body>
 		$!screen_content
@@ -157,6 +158,7 @@
 	
 - **/views/tools.xml** Velocity Tool 사용 XML입니다.
 
+##
 	<?xml version="1.0" encoding="UTF-8"?>
 	<tools>
 		<toolbox scope="application">
