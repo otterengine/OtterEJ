@@ -140,7 +140,9 @@
 	<distributable />
 	
 
-*/WEB-INF/ 의 기본 폴더* 해당 파일은 존재해야 함으로 꼭 생성해야합니다.
+*/WEB-INF/ 의 기본 폴더* 
+
+해당 파일은 존재해야 함으로 꼭 생성해야합니다.
 
 - **/views/shared/layout.default.vm** 레이아웃 기본 파일입니다. 
 
