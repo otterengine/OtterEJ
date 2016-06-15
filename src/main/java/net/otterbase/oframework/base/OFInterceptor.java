@@ -2,9 +2,9 @@ package net.otterbase.oframework.base;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-public abstract class RSInterceptor extends HandlerInterceptorAdapter {
+public abstract class OFInterceptor extends HandlerInterceptorAdapter {
 	
-	public RSInterceptor() {
+	public OFInterceptor() {
 		
 	}
 

@@ -23,9 +23,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import net.otterbase.oframework.RSContext;
-import net.otterbase.oframework.base.RSComponent;
-import net.otterbase.oframework.base.RSInterceptor;
+import net.otterbase.oframework.OFContext;
+import net.otterbase.oframework.base.OFInterceptor;
 import net.otterbase.oframework.common.interceptor.RequestInterceptor;
 
 @Configuration
@@ -34,8 +33,7 @@ import net.otterbase.oframework.common.interceptor.RequestInterceptor;
 	useDefaultFilters = false, 
 	includeFilters = { 
 			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Controller.class),
-			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Service.class),
-			@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = RSComponent.class)
+			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Service.class)
 	})
 @Import(value = { SpringVelocityConfig.class })
 public class MvcConfig extends WebMvcConfigurerAdapter {
@@ -50,7 +48,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 		String sep = File.separator;
 		String prefix = sep + "WEB-INF" + sep + "messages";
 
-		File dir = new File(RSContext.getPath() + prefix);
+		File dir = new File(OFContext.getPath() + prefix);
 		
 		List<String> names = new ArrayList<String>();
 		if (dir.exists() && dir.listFiles() != null) {
@@ -78,14 +76,14 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 	public JavaMailSender mailSender() {
 
 		Properties properties = new Properties();
-		for(Object key : RSContext.keySet()) {
+		for(Object key : OFContext.keySet()) {
 			if (!key.toString().startsWith("mail.smtp.")) continue;
-			properties.put(key, RSContext.getProperty(key.toString()).trim());
+			properties.put(key, OFContext.getProperty(key.toString()).trim());
 		}
 		
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setUsername(RSContext.getProperty("mail.username"));
-		mailSender.setPassword(RSContext.getProperty("mail.password"));
+		mailSender.setUsername(OFContext.getProperty("mail.username"));
+		mailSender.setPassword(OFContext.getProperty("mail.password"));
 		mailSender.setJavaMailProperties(properties);
 		
 		return mailSender;
@@ -96,10 +94,10 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
 		registry.addInterceptor(new RequestInterceptor());
 
-		Reflections reflections = new Reflections(RSContext.getProperty("rsengine.package"));
-		for (Class<? extends RSInterceptor> subType : reflections.getSubTypesOf(RSInterceptor.class)) {
+		Reflections reflections = new Reflections(OFContext.getProperty("rsengine.package"));
+		for (Class<? extends OFInterceptor> subType : reflections.getSubTypesOf(OFInterceptor.class)) {
 			try {
-				RSInterceptor interceptor = subType.newInstance();
+				OFInterceptor interceptor = subType.newInstance();
 				if (interceptor != null) registry.addInterceptor(interceptor);
 			}
 			catch(Exception ex) {
@@ -113,7 +111,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
 		try {
 
-			File dir = new File(RSContext.getPath());
+			File dir = new File(OFContext.getPath());
 			
 			FileFilter directoryFilter = new FileFilter() {
 				public boolean accept(File file) {

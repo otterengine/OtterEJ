@@ -17,7 +17,7 @@ import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.velocity.VelocityConfigurer;
 
-import net.otterbase.oframework.RSContext;
+import net.otterbase.oframework.OFContext;
 import net.otterbase.oframework.annotation.ViewHelper;
 import net.otterbase.oframework.views.VelocityMultipleLayoutViewResolver;
 import net.otterbase.oframework.views.VelocityToolboxView;
@@ -89,7 +89,7 @@ public class SpringVelocityConfig implements ApplicationContextAware {
 
 		Map<String, Object> attributes = new HashMap<String, Object>();
 
-		Reflections reflections = new Reflections(RSContext.getProperty("rsengine.package"));
+		Reflections reflections = new Reflections(OFContext.getProperty("rsengine.package"));
 		Set<Class<?>> subTypes = reflections.getTypesAnnotatedWith(ViewHelper.class);
 		for (Class<?> subType : subTypes) {
 			ViewHelper anno = (ViewHelper) subType.getAnnotation(ViewHelper.class);

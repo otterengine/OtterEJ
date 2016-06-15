@@ -1,5 +1,5 @@
 package net.otterbase.oframework.base;
 
-public class RSComponent {
+public abstract class OFSecurity {
 
 }

@@ -9,21 +9,21 @@ import org.reflections.Reflections;
 import net.otterbase.oframework.annotation.LoginObject;
 import net.sf.json.JSONObject;
 
-public class RSContext {
+public class OFContext {
 	
-	private static RSContext _instance;
-	public static RSContext getInstance() {
-		if (_instance == null) _instance = new RSContext();
+	private static OFContext _instance;
+	public static OFContext getInstance() {
+		if (_instance == null) _instance = new OFContext();
 		return _instance;
 	}
 	
 	private RSApplication application;
 	private JSONObject property;
-	private RSContext() {
+	private OFContext() {
 		try {
 			Properties p = new Properties();
 			
-			String path = getClass().getResource("/rsengine.properties").getPath();
+			String path = getClass().getResource("/otter.properties").getPath();
 			path = path.substring(0, path.lastIndexOf("/"));
 			
 			File dir = new File(path);
@@ -39,12 +39,6 @@ public class RSContext {
 			
 			p.clear();
 			
-
-			Reflections reflections = new Reflections(property.getString("rsengine.package"));
-			for (Class<? extends RSApplication> subType : reflections.getSubTypesOf(RSApplication.class)) {
-				application = (RSApplication) subType.newInstance();
-				break;
-			}
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -53,7 +47,7 @@ public class RSContext {
 	
 	public static String getProperty(String key) {
 		try {
-			if (_instance == null) _instance = new RSContext();
+			if (_instance == null) _instance = new OFContext();
 			return _instance.property.getString(key);
 		}
 		catch(Exception ex) {
@@ -62,18 +56,18 @@ public class RSContext {
 	}
 	
 	public static RSApplication getApplication() {
-		if (_instance == null) _instance = new RSContext();
+		if (_instance == null) _instance = new OFContext();
 		return _instance.application;
 	}
 	
 	public static String getPath() {
-		if (_instance == null) _instance = new RSContext();
+		if (_instance == null) _instance = new OFContext();
 		return _instance.getFPath();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static Set<String> keySet() {
-		if (_instance == null) _instance = new RSContext();
+		if (_instance == null) _instance = new OFContext();
 		return _instance.property.keySet();
 	}
 	
@@ -81,7 +75,7 @@ public class RSContext {
 	
 	public static Class<?> getSignOnClass() {
 		if (signOnClass == null) {
-			Reflections reflections = new Reflections(RSContext.getProperty("rsengine.package"));
+			Reflections reflections = new Reflections(OFContext.getProperty("rsengine.package"));
 			Set<Class<?>> subTypes = reflections.getTypesAnnotatedWith(LoginObject.class);
 
 			for (Class<?> subType : subTypes) {

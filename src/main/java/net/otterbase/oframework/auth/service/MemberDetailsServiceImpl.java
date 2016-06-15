@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import net.otterbase.oframework.RSContext;
+import net.otterbase.oframework.OFContext;
 import net.otterbase.oframework.annotation.LoginObject;
 import net.otterbase.oframework.auth.vo.SignOnInterface;
 
@@ -27,7 +27,7 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
 		Session session = sessionFactory.getCurrentSession();
 		session.getTransaction().begin();
 		
-		Class<?> accountClass = RSContext.getSignOnClass();
+		Class<?> accountClass = OFContext.getSignOnClass();
 		SignOnInterface account = null;
 		
 		try {

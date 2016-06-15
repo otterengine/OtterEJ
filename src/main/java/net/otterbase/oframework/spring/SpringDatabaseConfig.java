@@ -14,7 +14,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import net.otterbase.oframework.RSContext;
+import net.otterbase.oframework.OFContext;
 
 @Configuration
 @EnableTransactionManagement
@@ -34,10 +34,10 @@ public class SpringDatabaseConfig {
 		BasicDataSource dataSource;
 		try {
 			dataSource = new BasicDataSource();
-			dataSource.setDriverClassName(RSContext.getProperty("hibernate.connection.driver_class").trim());
-			dataSource.setUrl(RSContext.getProperty("rsengine.db.jdbc_url").trim());
-			dataSource.setUsername(RSContext.getProperty("rsengine.db.username").trim());
-			dataSource.setPassword(RSContext.getProperty("rsengine.db.password").trim());
+			dataSource.setDriverClassName(OFContext.getProperty("hibernate.connection.driver_class").trim());
+			dataSource.setUrl(OFContext.getProperty("rsengine.db.jdbc_url").trim());
+			dataSource.setUsername(OFContext.getProperty("rsengine.db.username").trim());
+			dataSource.setPassword(OFContext.getProperty("rsengine.db.password").trim());
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -54,12 +54,12 @@ public class SpringDatabaseConfig {
 		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
 
 		try {
-			sessionBuilder.scanPackages(RSContext.getProperty("rsengine.db.package").trim());
+			sessionBuilder.scanPackages(OFContext.getProperty("rsengine.db.package").trim());
 
 			Properties properties = new Properties();
-			for(Object key : RSContext.keySet()) {
+			for(Object key : OFContext.keySet()) {
 				if (!key.toString().startsWith("hibernate.")) continue;
-				properties.put(key, RSContext.getProperty(key.toString()).trim());
+				properties.put(key, OFContext.getProperty(key.toString()).trim());
 			}
 			sessionBuilder.addProperties(properties);
 		}
