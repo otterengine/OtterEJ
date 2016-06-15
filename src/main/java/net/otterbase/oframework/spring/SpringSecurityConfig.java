@@ -69,7 +69,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     protected TokenBasedRememberMeServices rememberMeServices(UserDetailsService userDetailsService) {
     	TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices("otter_remembers", userDetailsService);
     	rememberMeServices.setAlwaysRemember(false);
-    	rememberMeServices.setParameter("user_rememberme");
+    	rememberMeServices.setParameter("remember_me");
     	rememberMeServices.setTokenValiditySeconds(900);
     	rememberMeServices.setCookieName("tt");
     	return rememberMeServices;
