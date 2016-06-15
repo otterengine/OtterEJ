@@ -1,7 +1,14 @@
-# OtterEJ
+## OtterEJ – Otter Engine in Java
+
+*OtterEngine* is a light-weight Website frameworks, released under a Modified BSD licence.
 
 
-####
+## Quickstart
+
+
+*web.xml*
+자바 웹 프로젝트 내에 web.xml에 해당 내용을 먼저 삽입합니다.
+
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -18,7 +25,7 @@
 
 	<filter>
 		<filter-name>realIPFilter</filter-name>
-		<filter-class>kr.co.reconers.rsengine.common.wrapper.RealIPFilter</filter-class>
+		<filter-class>net.otterbase.oframework.common.wrapper.RealIPFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>realIPFilter</filter-name>
@@ -41,7 +48,7 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>kr.co.reconers.rsengine.spring.RootConfig</param-value>
+		<param-value>net.otterbase.oframework.spring.RootConfig</param-value>
 	</context-param>
 	
 	<listener>
@@ -57,7 +64,7 @@
 		</init-param>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>kr.co.reconers.rsengine.spring.MvcConfig</param-value>
+			<param-value>net.otterbase.oframework.spring.MvcConfig</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -68,6 +75,4 @@
 	</servlet-mapping>
 
 	<distributable />
-	
-	####
 	
