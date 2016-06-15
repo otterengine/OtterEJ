@@ -4,9 +4,6 @@ import java.io.File;
 import java.util.Properties;
 import java.util.Set;
 
-import org.reflections.Reflections;
-
-import net.otterbase.oframework.annotation.LoginObject;
 import net.sf.json.JSONObject;
 
 public class OFContext {
@@ -71,21 +68,6 @@ public class OFContext {
 		return _instance.property.keySet();
 	}
 	
-	private static Class<?> signOnClass = null;
-	
-	public static Class<?> getSignOnClass() {
-		if (signOnClass == null) {
-			Reflections reflections = new Reflections(OFContext.getProperty("rsengine.package"));
-			Set<Class<?>> subTypes = reflections.getTypesAnnotatedWith(LoginObject.class);
-
-			for (Class<?> subType : subTypes) {
-				signOnClass = subType;
-				break;
-			}
-		}
-		return signOnClass;
-	}
-
 	public String getFPath() {
 		File libPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
 		String path = libPath.getParent();
