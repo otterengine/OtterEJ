@@ -18,7 +18,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 
-public class VelocityStrUtils {
+public class VUCommon {
 	
 	@Autowired private MessageSource messageSource;
 	

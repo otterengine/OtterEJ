@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.otterbase.oframework.common.wrapper.ServletContextHolder;
 
-public class VelocityHTMLUtils {
+public class VUHtmlTag {
 	
 	public String selected(Object data1, Object data2) {
 		return this.htmlattr(data1, data2, "selected=\"selected\"", false);

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import net.otterbase.oframework.auth.vo.SignedDetails;
 
-public class VelocitySecUser {
+public class VUSecurity {
 
 	public static String getPrincipal() {
 		Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

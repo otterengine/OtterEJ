@@ -21,9 +21,9 @@ import net.otterbase.oframework.OFContext;
 import net.otterbase.oframework.annotation.ViewHelper;
 import net.otterbase.oframework.views.VelocityMultipleLayoutViewResolver;
 import net.otterbase.oframework.views.VelocityToolboxView;
-import net.otterbase.oframework.views.helper.VelocityHTMLUtils;
-import net.otterbase.oframework.views.helper.VelocitySecUser;
-import net.otterbase.oframework.views.helper.VelocityStrUtils;
+import net.otterbase.oframework.views.helper.VUHtmlTag;
+import net.otterbase.oframework.views.helper.VUSecurity;
+import net.otterbase.oframework.views.helper.VUCommon;
 
 @Configuration
 public class SpringVelocityConfig implements ApplicationContextAware {
@@ -36,18 +36,18 @@ public class SpringVelocityConfig implements ApplicationContextAware {
 	}
 
 	@Bean
-	public VelocitySecUser veloSecUser() {
-		return new VelocitySecUser();
+	public VUSecurity veloSecUser() {
+		return new VUSecurity();
 	}
 	
 	@Bean
-	public VelocityHTMLUtils veloHTMLUtils() {
-		return new VelocityHTMLUtils();
+	public VUHtmlTag veloHTMLUtils() {
+		return new VUHtmlTag();
 	}
 	
 	@Bean
-	public VelocityStrUtils veloStringUtils() {
-		return new VelocityStrUtils();
+	public VUCommon veloStringUtils() {
+		return new VUCommon();
 	}
 	
 	@Bean
@@ -96,9 +96,9 @@ public class SpringVelocityConfig implements ApplicationContextAware {
 			attributes.put(anno.name(), context.getBean(subType));
 		}
 		
-		attributes.put("sec", context.getBean(VelocitySecUser.class));
-		attributes.put("html", context.getBean(VelocityHTMLUtils.class));
-		attributes.put("str", context.getBean(VelocityStrUtils.class));
+		attributes.put("sec", context.getBean(VUSecurity.class));
+		attributes.put("html", context.getBean(VUHtmlTag.class));
+		attributes.put("str", context.getBean(VUCommon.class));
 
 		resolver.setAttributesMap(attributes);
 

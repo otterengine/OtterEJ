@@ -55,6 +55,11 @@
 	webapp.db.username={ JDBC ID }
 	webapp.db.password={ JDBC Password }
 	
+	webapp.file.path={File Save Path}
+	webapp.file.imagemagick={install imagemagick path}
+	
+	
+	
 	hibernate.show_sql=false
 	
 	hibernate.connection.driver_class=com.mysql.jdbc.Driver
@@ -68,6 +73,8 @@
 	hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
 	hibernate.cache.use_query_cache=true
 	hibernate.query.substitutions=true 1,false 0
+	
+	
 	
 
 */WEB-INF/web.xml*
