@@ -35,9 +35,9 @@ public class SpringDatabaseConfig {
 		try {
 			dataSource = new BasicDataSource();
 			dataSource.setDriverClassName(OFContext.getProperty("hibernate.connection.driver_class").trim());
-			dataSource.setUrl(OFContext.getProperty("rsengine.db.jdbc_url").trim());
-			dataSource.setUsername(OFContext.getProperty("rsengine.db.username").trim());
-			dataSource.setPassword(OFContext.getProperty("rsengine.db.password").trim());
+			dataSource.setUrl(OFContext.getProperty("webapp.db.jdbc_url").trim());
+			dataSource.setUsername(OFContext.getProperty("webapp.db.username").trim());
+			dataSource.setPassword(OFContext.getProperty("webapp.db.password").trim());
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -54,7 +54,7 @@ public class SpringDatabaseConfig {
 		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
 
 		try {
-			sessionBuilder.scanPackages(OFContext.getProperty("rsengine.db.package").trim());
+			sessionBuilder.scanPackages(OFContext.getProperty("webapp.db.package").trim());
 
 			Properties properties = new Properties();
 			for(Object key : OFContext.keySet()) {

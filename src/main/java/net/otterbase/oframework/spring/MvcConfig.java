@@ -10,13 +10,11 @@ import org.reflections.Reflections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -29,12 +27,8 @@ import net.otterbase.oframework.common.interceptor.RequestInterceptor;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "*", 
-	useDefaultFilters = false, 
-	includeFilters = { 
-			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Controller.class),
-			@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Service.class)
-	})
+@PropertySource("classpath:otter.properties")
+@ComponentScan(basePackages = "${webapp.package}")
 @Import(value = { SpringVelocityConfig.class })
 public class MvcConfig extends WebMvcConfigurerAdapter {
 
@@ -77,13 +71,13 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
 		Properties properties = new Properties();
 		for(Object key : OFContext.keySet()) {
-			if (!key.toString().startsWith("mail.smtp.")) continue;
+			if (!key.toString().startsWith("webapp.mail.smtp.")) continue;
 			properties.put(key, OFContext.getProperty(key.toString()).trim());
 		}
 		
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setUsername(OFContext.getProperty("mail.username"));
-		mailSender.setPassword(OFContext.getProperty("mail.password"));
+		mailSender.setUsername(OFContext.getProperty("webapp.mail.username"));
+		mailSender.setPassword(OFContext.getProperty("webapp.mail.password"));
 		mailSender.setJavaMailProperties(properties);
 		
 		return mailSender;
@@ -94,7 +88,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
 		registry.addInterceptor(new RequestInterceptor());
 
-		Reflections reflections = new Reflections(OFContext.getProperty("rsengine.package"));
+		Reflections reflections = new Reflections(OFContext.getProperty("webapp.package"));
 		for (Class<? extends OFInterceptor> subType : reflections.getSubTypesOf(OFInterceptor.class)) {
 			try {
 				OFInterceptor interceptor = subType.newInstance();
