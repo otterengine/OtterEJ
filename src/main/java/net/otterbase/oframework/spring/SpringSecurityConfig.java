@@ -3,8 +3,10 @@ package net.otterbase.oframework.spring;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.SessionFactory;
+import org.reflections.Reflections;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -23,10 +25,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 
 import net.otterbase.oframework.OFContext;
-import net.otterbase.oframework.auth.enc.MySQLEncoder;
 import net.otterbase.oframework.auth.handler.AuthorizeFailureHandler;
 import net.otterbase.oframework.auth.handler.AuthorizeSuccessHandler;
-import net.otterbase.oframework.auth.service.MemberDetailsServiceImpl;
+import net.otterbase.oframework.base.OFSecurity;
 
 @Configuration
 @EnableWebSecurity
@@ -42,16 +43,25 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		this.context = applicationContext;
 	}
 	
-	@Bean
-	protected UserDetailsService userDetailsService() {
-		MemberDetailsServiceImpl service = new MemberDetailsServiceImpl();
-    	service.setSessionFactory(sessionFactory);
-    	return service;
-	}
 
     @Bean
-    protected MySQLEncoder mysqlEncoder() {
-    	return new MySQLEncoder();
+    protected OFSecurity getOSecurity() {
+    	
+    	Reflections reflections = new Reflections(OFContext.getProperty("webapp.package"));
+		Set<Class<? extends OFSecurity>> subTypes = reflections.getSubTypesOf(OFSecurity.class);
+
+		OFSecurity result = null;
+		for (Class<?> subType : subTypes) {
+			try {
+				result = (OFSecurity) subType.newInstance();
+				result.setSessionFactory(sessionFactory);
+				break;
+			}
+			catch(Exception ex) {
+			}
+		}
+    	
+    	return result;
     }
     
     @Autowired
@@ -98,8 +108,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(context.getBean(UserDetailsService.class))
-        	.passwordEncoder(context.getBean(MySQLEncoder.class));
+        auth.userDetailsService(context.getBean(OFSecurity.class))
+        	.passwordEncoder(context.getBean(OFSecurity.class));
     }
     
 	@Override
