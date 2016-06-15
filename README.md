@@ -15,8 +15,8 @@
 */pom.xml*
 
 	<repository>
-		<id>reconers</id>
-		<name>Reconers</name>
+		<id>otterbase</id>
+		<name>Otter Engine</name>
 		<url>http://mvn.reconers.com/content/repositories/mlib/</url>
 	</repository>
 	
@@ -26,6 +26,12 @@
 		<groupId>net.otterbase</groupId>
 		<artifactId>OFramework</artifactId>
 		<version>1.0.0</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.24</version>
 	</dependency>
 
 
@@ -133,3 +139,9 @@
 
 	<distributable />
 	
+
+*/WEB-INF/ 의 기본 폴더* 해당 파일은 존재해야 함으로 꼭 생성해야합니다.
+
+	**/views/shared/layout.default.vm** 레이아웃 기본 파일입니다. 
+
+
