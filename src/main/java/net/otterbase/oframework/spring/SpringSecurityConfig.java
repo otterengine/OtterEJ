@@ -114,6 +114,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		
+		if (context.getBean(OFSecurity.class) == null) return;
 
 		http.csrf().disable();
 		
@@ -136,12 +138,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			.successHandler(context.getBean(AuthorizeSuccessHandler.class))
 			.failureHandler(context.getBean(AuthorizeFailureHandler.class));
 		
-		if (OFContext.getApplication() != null) {
-	        Map<String, String> securityPath = OFContext.getApplication().getSecurityPath();
-			ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry security = http.authorizeRequests();
-			for (String key : securityPath.keySet()) {
-				security.antMatchers(key).access(securityPath.get(key));
-			}
+        Map<String, String> securityPath = context.getBean(OFSecurity.class).getSecurityPath();
+		ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry security = http.authorizeRequests();
+		for (String key : securityPath.keySet()) {
+			security.antMatchers(key).access(securityPath.get(key));
 		}
 
 		http.rememberMe()

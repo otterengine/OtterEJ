@@ -14,7 +14,6 @@ public class OFContext {
 		return _instance;
 	}
 	
-	private RSApplication application;
 	private JSONObject property;
 	private OFContext() {
 		try {
@@ -50,11 +49,6 @@ public class OFContext {
 		catch(Exception ex) {
 			return null;
 		}
-	}
-	
-	public static RSApplication getApplication() {
-		if (_instance == null) _instance = new OFContext();
-		return _instance.application;
 	}
 	
 	public static String getPath() {
