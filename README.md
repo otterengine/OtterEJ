@@ -170,8 +170,9 @@
 	</tools>
 
 	
-- **/messages/OOO_ko_KR.properties 언어팩 파일입니다.
+- **/messages/OOO_XX_XX.properties** 언어팩 파일입니다. (admin_ko_KR.properties)
 
+##
 	message.foo.bar = hello world.
  
 
