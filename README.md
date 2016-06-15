@@ -139,11 +139,33 @@
 
 	<distributable />
 	
+	
+	
 
 */WEB-INF/ 의 기본 폴더* 
 
 해당 파일은 존재해야 함으로 꼭 생성해야합니다.
 
 - **/views/shared/layout.default.vm** 레이아웃 기본 파일입니다. 
+	<html>
+		<body>
+		$!screen_content
+		</body>
+	</html>
+	
+- **/views/tools.xml** Velocity Tool 사용 XML입니다.
+	<?xml version="1.0" encoding="UTF-8"?>
+	<tools>
+		<toolbox scope="application">
+			<tool key="numberTool" class="org.apache.velocity.tools.generic.NumberTool"/>
+			<tool key="dateTool" class="org.apache.velocity.tools.generic.DateTool"/>
+			<tool key="esc" class="org.apache.velocity.tools.generic.EscapeTool"/>
+			<tool key="math" class="org.apache.velocity.tools.generic.MathTool"/>
+		</toolbox> 
+	</tools>
+	
+- **/messages/OOO_ko_KR.properties 언어팩 파일입니다.
+	message.foo.bar = hello world.
+ 
 
 
