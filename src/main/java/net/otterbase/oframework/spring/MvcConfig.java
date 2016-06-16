@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.reflections.Reflections;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,13 +29,21 @@ import net.otterbase.oframework.OFContext;
 import net.otterbase.oframework.base.OFInterceptor;
 import net.otterbase.oframework.common.interceptor.RequestInterceptor;
 import net.otterbase.oframework.file.AttachFileContext;
+import net.otterbase.oframework.mail.SMTPMailSender;
 
 @Configuration
 @EnableWebMvc
 @PropertySource("classpath:otter.properties")
 @ComponentScan(basePackages = "${webapp.package}")
 @Import(value = { SpringVelocityConfig.class })
-public class MvcConfig extends WebMvcConfigurerAdapter {
+public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+
+	private ApplicationContext context;
+	
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.context = applicationContext;
+	}
 	
 	@Bean
 	public AttachFileContext fileContext() {
@@ -73,7 +85,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 	}
 	
 	@Bean
-	public JavaMailSender mailSender() {
+	public JavaMailSender javaMailSender() {
 
 		Properties properties = new Properties();
 		for(Object key : OFContext.keySet()) {
@@ -87,6 +99,14 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 		mailSender.setJavaMailProperties(properties);
 		
 		return mailSender;
+	}
+	
+	@Bean
+	public SMTPMailSender mailSender() {
+		SMTPMailSender sender = new SMTPMailSender();
+		sender.setJavaMailSender((JavaMailSender) context.getBean("javaMailSender"));
+		sender.setVelocityEngine((VelocityEngine) context.getBean("velocityEngine"));
+		return sender;
 	}
 	
 	@Override

@@ -15,8 +15,8 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 		
 		ServletContextHolder.instance().sync(request, response);
 		
-//		request.setAttribute("http_url", pm.get("website.http_url"));
-//		request.setAttribute("https_url", pm.get("website.https_url"));
+//		request.setAttribute("http_url", pm.get("webapp.site_web_url"));
+//		request.setAttribute("https_url", pm.get("webapp.site_ssl_url"));
 		
 		UAgentInfo uaInfo = new UAgentInfo(request.getHeader("user-agent"), null);
 		
