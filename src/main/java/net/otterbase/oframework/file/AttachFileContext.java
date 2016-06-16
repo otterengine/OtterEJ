@@ -150,10 +150,10 @@ public class AttachFileContext {
 	
 	public File getFile(IAttachIndex index, long width, long height, String type) {
 
-		File tFile = new File(OFContext.getProperty("file.savePath") + "/" + index.getSavedPath() + "/" + width + "x" + height + "_" + type + ".jpg");
+		File tFile = new File(OFContext.getProperty("webapp.file.path") + "/" + index.getSavedPath() + "/" + width + "x" + height + "_" + type + ".jpg");
 		if (tFile.exists()) return tFile;
 
-		File afile = new File(OFContext.getProperty("file.savePath") + "/" + index.getSavedPath() + "/source");
+		File afile = new File(OFContext.getProperty("webapp.file.path") + "/" + index.getSavedPath() + "/source");
 
 		try {
 			if (OFContext.getProperty("webapp.file.imagemagick") != null && !OFContext.getProperty("webapp.file.imagemagick").isEmpty()) {
@@ -182,11 +182,11 @@ public class AttachFileContext {
 	
 	private File getFileForGD(IAttachIndex index, long width, long height, String thumbnail_type) {
 
-		File tFile = new File(OFContext.getProperty("file.savePath") + "/" + index.getSavedPath() + "/" + width + "x" + height + "_" + thumbnail_type + ".jpg");
+		File tFile = new File(OFContext.getProperty("webapp.file.path") + "/" + index.getSavedPath() + "/" + width + "x" + height + "_" + thumbnail_type + ".jpg");
 
 		try {
 			
-			File file = new File(OFContext.getProperty("file.savePath") + "/" + index.getSavedPath() + "/source");
+			File file = new File(OFContext.getProperty("webapp.file.path") + "/" + index.getSavedPath() + "/source");
 			BufferedImage img = ImageIO.read(file.toURI().toURL());
 
 			double width_per;
