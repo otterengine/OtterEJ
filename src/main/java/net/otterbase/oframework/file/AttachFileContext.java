@@ -148,7 +148,7 @@ public class AttachFileContext {
 		return new File(OFContext.getProperty("webapp.file.path") + "/" + index.getSavedPath() + "/source");
 	}
 	
-	public File getFile(IAttachIndex index, int width, int height, String type) {
+	public File getFile(IAttachIndex index, long width, long height, String type) {
 
 		File tFile = new File(OFContext.getProperty("file.savePath") + "/" + index.getSavedPath() + "/" + width + "x" + height + "_" + type + ".jpg");
 		if (tFile.exists()) return tFile;
@@ -156,14 +156,14 @@ public class AttachFileContext {
 		File afile = new File(OFContext.getProperty("file.savePath") + "/" + index.getSavedPath() + "/source");
 
 		try {
-			if (OFContext.getProperty("exec.imageMagick") != null && !OFContext.getProperty("exec.imageMagick").isEmpty()) {
+			if (OFContext.getProperty("webapp.file.imagemagick") != null && !OFContext.getProperty("webapp.file.imagemagick").isEmpty()) {
 				if (System.getProperty("os.name").contains("indows")) {
-		            String[] cmd = new String[] { "\"" + OFContext.getProperty("exec.imageMagick") + "\"", afile.toString(), "-resize", width + "x" + height + "^", "-quality", "100", "-gravity", "center", "-crop", width + "x" + height + "+0+0", "+repage", tFile.getPath() };
+		            String[] cmd = new String[] { "\"" + OFContext.getProperty("webapp.file.imagemagick") + "\"", afile.toString(), "-resize", width + "x" + height + "^", "-quality", "100", "-gravity", "center", "-crop", width + "x" + height + "+0+0", "+repage", tFile.getPath() };
 		            Process process = Runtime.getRuntime().exec(cmd);
 		            process.waitFor();
 				}
 				else {
-		            String[] cmd = new String[] { "/bin/sh", "-c", OFContext.getProperty("exec.imageMagick") + " " + afile.getPath() + " -resize " + width + "x" + height+ "^ -quality 100 -gravity center -crop " +  width + "x" + height + "+0+0 +repage" + " " + tFile.getPath() };
+		            String[] cmd = new String[] { "/bin/sh", "-c", OFContext.getProperty("webapp.file.imagemagick") + " " + afile.getPath() + " -resize " + width + "x" + height+ "^ -quality 100 -gravity center -crop " +  width + "x" + height + "+0+0 +repage" + " " + tFile.getPath() };
 		            Process process = Runtime.getRuntime().exec(cmd);
 		            process.waitFor();
 				}
@@ -180,7 +180,7 @@ public class AttachFileContext {
 		return tFile;
 	}
 	
-	private File getFileForGD(IAttachIndex index, int width, int height, String thumbnail_type) {
+	private File getFileForGD(IAttachIndex index, long width, long height, String thumbnail_type) {
 
 		File tFile = new File(OFContext.getProperty("file.savePath") + "/" + index.getSavedPath() + "/" + width + "x" + height + "_" + thumbnail_type + ".jpg");
 
