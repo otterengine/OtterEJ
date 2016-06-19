@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -74,14 +73,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     	rememberMeServices.setCookieName("tt");
     	return rememberMeServices;
     }
-
-    @Autowired
-    @Bean
-    protected AuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService) {
-    	DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-    	daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-    	return daoAuthenticationProvider;
-    }
     
     @Autowired
     @Bean
@@ -108,8 +99,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(context.getBean(OFSecurity.class))
-        	.passwordEncoder(context.getBean(OFSecurity.class));
+        auth.authenticationProvider(context.getBean(OFSecurity.class));
     }
     
 	@Override
@@ -144,9 +134,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			security.antMatchers(key).access(securityPath.get(key));
 		}
 
+		/*
 		http.rememberMe()
 			.key("otter_remembers")
 			.rememberMeServices(context.getBean(TokenBasedRememberMeServices.class));
+			*/
 		
 		http.logout()
 			.logoutUrl("/session/destroy")
