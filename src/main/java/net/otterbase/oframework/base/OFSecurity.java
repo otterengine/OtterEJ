@@ -23,7 +23,7 @@ public abstract class OFSecurity implements PasswordEncoder, UserDetailsService,
 		this.sessionFactory = sessionFactory;
 	}
 
-	public abstract Map<String, String> getSecurityPath();
+	public abstract Map<String, String[]> getSecurityPath();
 	public abstract SignedDetails attemptLogin(String username, String password);
 
     @Override

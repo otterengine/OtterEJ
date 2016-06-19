@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.SessionFactory;
 import org.reflections.Reflections;
 import org.springframework.beans.BeansException;
@@ -128,17 +129,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			.successHandler(context.getBean(AuthorizeSuccessHandler.class))
 			.failureHandler(context.getBean(AuthorizeFailureHandler.class));
 		
-        Map<String, String> securityPath = context.getBean(OFSecurity.class).getSecurityPath();
+        Map<String, String[]> securityPath = context.getBean(OFSecurity.class).getSecurityPath();
 		ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry security = http.authorizeRequests();
 		for (String key : securityPath.keySet()) {
-			security.antMatchers(key).access(securityPath.get(key));
+			security.regexMatchers(key).access("hasRole('" + StringUtils.join(securityPath.get(key), "','") + "')");
 		}
 
-		/*
 		http.rememberMe()
 			.key("otter_remembers")
 			.rememberMeServices(context.getBean(TokenBasedRememberMeServices.class));
-			*/
 		
 		http.logout()
 			.logoutUrl("/session/destroy")
