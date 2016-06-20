@@ -122,8 +122,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		}
 				
 		http.formLogin()
-			.loginPage("/login")
-			.loginProcessingUrl("/session/create")
+			.loginPage(OFContext.getProperty("webapp.security.login_page"))
+			.loginProcessingUrl("/authorize/create")
 			.usernameParameter("username")
 			.passwordParameter("password")
 			.successHandler(context.getBean(AuthorizeSuccessHandler.class))
