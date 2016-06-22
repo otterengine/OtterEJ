@@ -38,14 +38,20 @@ public abstract class OFSecurity implements PasswordEncoder, UserDetailsService,
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    	
+    	System.out.println("Authentication...");
         
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
+        
+        System.out.println("username . " + username);
+        System.out.println("password . " + password);
         
         SignedDetails principal = (SignedDetails) this.loadUserByUsername(username);
        	if (principal != null) {
        		// ID 가져온 뒤 처리 방식.
        		if (!this.matches(password, principal.getPassword())) {
+       			System.out.println("not matched password.");
        			throw new BadCredentialsException("Not matched Password.");
        		}
        	}
@@ -54,6 +60,8 @@ public abstract class OFSecurity implements PasswordEncoder, UserDetailsService,
        		// 해당 시 직접 가져오도록
        		principal = this.attemptLogin(username, password);
        	}
+       	
+       	System.out.println(principal);
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, principal.getAuthorities());
 		return auth;

@@ -79,7 +79,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     @Bean
     protected ProviderManager authenticationManager(AuthenticationProvider provider) {
     	List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
-    	providers.add(provider);
+    	providers.add(context.getBean(OFSecurity.class));
     	return new ProviderManager(providers);
     }
 
@@ -109,8 +109,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		if (context.getBean(OFSecurity.class) == null) return;
 
 		http.csrf().disable();
-		
-		http.exceptionHandling().accessDeniedPage("/login");
+		http.exceptionHandling().accessDeniedPage(OFContext.getProperty("webapp.security.login_page"));
 		
 		String sessions = OFContext.getProperty("webapp.security.max_session");
 		
