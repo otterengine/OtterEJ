@@ -39,13 +39,8 @@ public abstract class OFSecurity implements PasswordEncoder, UserDetailsService,
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     	
-    	System.out.println("Authentication...");
-        
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
-        
-        System.out.println("username . " + username);
-        System.out.println("password . " + password);
         
         SignedDetails principal = (SignedDetails) this.loadUserByUsername(username);
        	if (principal != null) {
@@ -61,8 +56,6 @@ public abstract class OFSecurity implements PasswordEncoder, UserDetailsService,
        		principal = this.attemptLogin(username, password);
        	}
        	
-       	System.out.println(principal);
-
 		Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, principal.getAuthorities());
 		return auth;
     }
