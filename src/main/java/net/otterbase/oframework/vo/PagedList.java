@@ -1,10 +1,13 @@
 package net.otterbase.oframework.vo;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
+import org.hibernate.internal.CriteriaImpl;
+import org.hibernate.internal.CriteriaImpl.OrderEntry;
 
 @SuppressWarnings("serial")
 public class PagedList<T> extends ArrayList<T> implements List<T> {
@@ -60,6 +63,11 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 	}
 
 	public void setRowSize(Criteria cr) {
+		Iterator<OrderEntry> orderIter = ((CriteriaImpl) cr).iterateOrderings();
+		while (orderIter.hasNext()) {
+		    orderIter.next();
+		    orderIter.remove();
+		}
 		this.setRowSize((Long) cr.setFirstResult(0).setProjection(Projections.rowCount()).uniqueResult());
 	}
 
