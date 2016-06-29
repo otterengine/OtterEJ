@@ -149,7 +149,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			.rememberMeServices(context.getBean(TokenBasedRememberMeServices.class));
 		
 		http.logout()
-			.logoutUrl("/session/destroy")
+			.logoutUrl("/authorize/destroy")
 			.invalidateHttpSession(true)
 			.logoutSuccessUrl("/");
 		

@@ -15,7 +15,7 @@ public class OFContext {
 	}
 	
 	private JSONObject property;
-	private Class baseClass;
+	private Class<?> baseClass;
 	private OFContext() {
 		try {
 			baseClass = this.getClass();
