@@ -57,6 +57,46 @@ public class HttpClient {
 		
 	}
 
+	public static HttpResult getWithAuthorize(String url, String header) {
+
+		HttpResult result = new HttpResult();
+		
+		try {
+			URL fbURL = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) fbURL.openConnection();
+			con.setDoInput(true);
+			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			con.setRequestProperty("Authorization", header);
+			con.setRequestMethod("POST");
+			con.setDoOutput(true);
+			con.setReadTimeout(1000);
+			con.setUseCaches(false);
+
+			InputStream in;
+			if (con.getResponseCode() >= 400) {
+				in = con.getErrorStream();
+				result.setSuccess(false);
+			}
+			else {
+				in = con.getInputStream();
+				result.setSuccess(true);
+			}
+
+			StringBuffer buffer = new StringBuffer();
+			byte[] b = new byte[4096];
+			for (int n; (n = in.read(b)) != -1;) buffer.append(new String(b, 0, n));
+
+			result.setStatus(con.getResponseCode());
+			result.setData(buffer.toString());
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			result.setSuccess(false);
+		}
+		
+		return result;
+		
+	}
 	public static HttpResult post(String url, String param) {
 
 		HttpResult result = new HttpResult();
