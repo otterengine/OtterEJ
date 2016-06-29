@@ -111,6 +111,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		http.csrf().disable();
 		http.exceptionHandling().accessDeniedPage(OFContext.getProperty("webapp.security.login_page"));
 		
+		http
+		   .headers()
+		      .frameOptions()
+		         .sameOrigin();
+		
 		String sessions = OFContext.getProperty("webapp.security.max_session");
 		
 		if (sessions != null && !sessions.isEmpty()) {
