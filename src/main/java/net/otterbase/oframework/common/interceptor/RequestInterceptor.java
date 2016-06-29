@@ -7,6 +7,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import net.otterbase.oframework.common.UAgentInfo;
 import net.otterbase.oframework.common.wrapper.ServletContextHolder;
+import net.otterbase.oframework.vo.ParamData;
 
 public class RequestInterceptor extends HandlerInterceptorAdapter {
 	
@@ -14,6 +15,8 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		
 		ServletContextHolder.instance().sync(request, response);
+		ParamData.sync(request);
+		
 		
 //		request.setAttribute("http_url", pm.get("webapp.site_web_url"));
 //		request.setAttribute("https_url", pm.get("webapp.site_ssl_url"));
