@@ -129,10 +129,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			.failureHandler(context.getBean(AuthorizeFailureHandler.class));
 		
         Map<String, String[]> securityPath = context.getBean(OFSecurity.class).getSecurityPath();
-		ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry security = http.authorizeRequests();
-		for (String key : securityPath.keySet()) {
-			security.regexMatchers(key).access("hasRole('" + StringUtils.join(securityPath.get(key), "','") + "')");
-		}
+        if (securityPath != null) {
+			ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry security = http.authorizeRequests();
+			for (String key : securityPath.keySet()) {
+				security.regexMatchers(key).access("hasRole('" + StringUtils.join(securityPath.get(key), "','") + "')");
+			}
+        }
 
 		http.rememberMe()
 			.key("otter_remembers")
