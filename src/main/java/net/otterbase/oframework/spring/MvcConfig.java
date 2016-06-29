@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
+
 import org.apache.velocity.app.VelocityEngine;
 import org.reflections.Reflections;
 import org.springframework.beans.BeansException;
@@ -60,7 +62,8 @@ public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		String sep = File.separator;
 		String prefix = sep + "WEB-INF" + sep + "messages";
 
-		File dir = new File(OFContext.getPath() + prefix);
+		ServletContext servletContext = context.getBean(ServletContext.class);
+		File dir = new File(servletContext.getRealPath("/WEB-INF/messages/"));
 		
 		List<String> names = new ArrayList<String>();
 		if (dir.exists() && dir.listFiles() != null) {
@@ -130,8 +133,9 @@ public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
 		try {
-
-			File dir = new File(OFContext.getPath());
+			
+			ServletContext servletContext = context.getBean(ServletContext.class);
+			File dir = new File(servletContext.getRealPath("/"));
 			
 			FileFilter directoryFilter = new FileFilter() {
 				public boolean accept(File file) {

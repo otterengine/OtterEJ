@@ -55,9 +55,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			try {
 				result = (OFSecurity) subType.newInstance();
 				result.setSessionFactory(sessionFactory);
-				
-				OFContext.refreshPath(subType);
-				
 				break;
 			}
 			catch(Exception ex) {

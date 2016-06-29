@@ -15,10 +15,8 @@ public class OFContext {
 	}
 	
 	private JSONObject property;
-	private Class<?> baseClass;
 	private OFContext() {
 		try {
-			baseClass = this.getClass();
 			Properties p = new Properties();
 			
 			String path = getClass().getResource("/otter.properties").getPath();
@@ -53,31 +51,11 @@ public class OFContext {
 		}
 	}
 
-	public static void refreshPath(Class<?> subType) {
-		if (_instance == null) _instance = new OFContext();
-		_instance.baseClass = subType;
-	}
-	
-	public static String getPath() {
-		if (_instance == null) _instance = new OFContext();
-		return _instance.getFPath();
-	}
 
 	@SuppressWarnings("unchecked")
 	public static Set<String> keySet() {
 		if (_instance == null) _instance = new OFContext();
 		return _instance.property.keySet();
 	}
-	
-	public String getFPath() {
-		File libPath = new File(baseClass.getProtectionDomain().getCodeSource().getLocation().getFile());
-		String path = libPath.getParent();
-		if (path.indexOf("WEB-INF") > 0) {
-			path = path.substring(0, path.lastIndexOf("WEB-INF") - 1);
-		}
-		return path;
-	}
-
-
 
 }
