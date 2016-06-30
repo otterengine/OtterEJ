@@ -61,30 +61,35 @@ public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	public ReloadableResourceBundleMessageSource messageSource() {
 		String sep = File.separator;
 		String prefix = sep + "WEB-INF" + sep + "messages";
-
-		ServletContext servletContext = context.getBean(ServletContext.class);
-		File dir = new File(servletContext.getRealPath("/WEB-INF/messages/"));
 		
-		List<String> names = new ArrayList<String>();
-		if (dir.exists() && dir.listFiles() != null) {
-			for (File file : dir.listFiles()) {
-				if (file == null || !file.isFile()) continue;
-				String name = file.getName();
-				name = name.substring(0, name.lastIndexOf("."));
-				if (name.contains("_")) name = name.substring(0, name.indexOf("_"));
-				if (!names.contains(prefix + sep + name)) names.add(prefix + sep + name);
+		try {
+			ServletContext servletContext = context.getBean(ServletContext.class);
+			File dir = new File(servletContext.getRealPath("/WEB-INF/messages/"));
+			
+			List<String> names = new ArrayList<String>();
+			if (dir.exists() && dir.listFiles() != null) {
+				for (File file : dir.listFiles()) {
+					if (file == null || !file.isFile()) continue;
+					String name = file.getName();
+					name = name.substring(0, name.lastIndexOf("."));
+					if (name.contains("_")) name = name.substring(0, name.indexOf("_"));
+					if (!names.contains(prefix + sep + name)) names.add(prefix + sep + name);
+				}
 			}
+			
+			ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+			messageSource.setDefaultEncoding("UTF-8");
+			if (names.size() > 0) {
+				String[] nameArray = names.toArray(new String[names.size()]);
+				messageSource.setBasenames(nameArray);
+				messageSource.setCacheSeconds(0);
+			}
+			
+			return messageSource;
 		}
-		
-		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-		messageSource.setDefaultEncoding("UTF-8");
-		if (names.size() > 0) {
-			String[] nameArray = names.toArray(new String[names.size()]);
-			messageSource.setBasenames(nameArray);
-			messageSource.setCacheSeconds(0);
+		catch(Exception ex) {
+			return null;
 		}
-		
-		return messageSource;
 	}
 	
 	@Bean

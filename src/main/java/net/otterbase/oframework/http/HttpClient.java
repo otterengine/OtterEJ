@@ -8,7 +8,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpClient {
+
 	public static HttpResult get(String url) {
+		return get(url, 1000);
+	}
+	
+	public static HttpResult get(String url, int timeout) {
 
 		HttpResult result = new HttpResult();
 		
@@ -18,7 +23,7 @@ public class HttpClient {
 			con.setDoInput(true);
 			con.setRequestMethod("GET");
 			con.setDoOutput(true);
-			con.setReadTimeout(5000);
+			if (timeout > 0) con.setReadTimeout(timeout);
 			con.setUseCaches(false);
 
 			InputStream in;
@@ -58,6 +63,10 @@ public class HttpClient {
 	}
 
 	public static HttpResult getWithAuthorize(String url, String header) {
+		return getWithAuthorize(url, header, 1000);
+	}
+	
+	public static HttpResult getWithAuthorize(String url, String header, int timeout) {
 
 		HttpResult result = new HttpResult();
 		
@@ -65,11 +74,10 @@ public class HttpClient {
 			URL fbURL = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) fbURL.openConnection();
 			con.setDoInput(true);
-			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			con.setRequestProperty("Authorization", header);
-			con.setRequestMethod("POST");
+			con.setRequestMethod("GET");
+			if (timeout > 0) con.setReadTimeout(timeout);
 			con.setDoOutput(true);
-			con.setReadTimeout(1000);
 			con.setUseCaches(false);
 
 			InputStream in;
@@ -97,7 +105,12 @@ public class HttpClient {
 		return result;
 		
 	}
+
 	public static HttpResult post(String url, String param) {
+		return post(url, param, 1000);
+	}
+	
+	public static HttpResult post(String url, String param, int timeout) {
 
 		HttpResult result = new HttpResult();
 		
@@ -108,7 +121,7 @@ public class HttpClient {
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			con.setRequestMethod("POST");
 			con.setDoOutput(true);
-			con.setReadTimeout(1000);
+			if (timeout > 0) con.setReadTimeout(timeout);
 			con.setUseCaches(false);
 
 			OutputStream out = con.getOutputStream();
@@ -143,6 +156,10 @@ public class HttpClient {
 	}
 
 	public static HttpResult postWithAuthorize(String url, String param, String header) {
+		return postWithAuthorize(url, param, header, 1000);
+	}
+	
+	public static HttpResult postWithAuthorize(String url, String param, String header, int timeout) {
 
 		HttpResult result = new HttpResult();
 		
@@ -154,7 +171,7 @@ public class HttpClient {
 			con.setRequestProperty("Authorization", header);
 			con.setRequestMethod("POST");
 			con.setDoOutput(true);
-			con.setReadTimeout(1000);
+			if (timeout > 0) con.setReadTimeout(timeout);
 			con.setUseCaches(false);
 
 			OutputStream out = con.getOutputStream();
