@@ -2,6 +2,9 @@ package net.otterbase.oframework.base;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hibernate.SessionFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,6 +28,10 @@ public abstract class OFSecurity implements PasswordEncoder, UserDetailsService,
 
 	public abstract Map<String, String[]> getSecurityPath();
 	public abstract SignedDetails attemptLogin(String username, String password);
+	
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) { }
+
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) { }
 
     @Override
     public boolean supports(Class<?> authentication) {

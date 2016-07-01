@@ -21,7 +21,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 
 import net.otterbase.oframework.OFContext;
@@ -66,8 +65,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     
     @Autowired
     @Bean
-    protected TokenBasedRememberMeServices rememberMeServices(UserDetailsService userDetailsService) {
-    	TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices("otter_remembers", userDetailsService);
+    protected TokenBasedRememberMeServices rememberMeServices(OFSecurity security) {
+    	if (security == null) return null;
+    	TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices("otter_remembers", security);
     	rememberMeServices.setAlwaysRemember(false);
     	rememberMeServices.setParameter("remember_me");
     	rememberMeServices.setTokenValiditySeconds(900);
@@ -87,6 +87,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     protected AuthorizeSuccessHandler authorizeSuccessHandler() {
     	AuthorizeSuccessHandler authorizeSuccessHandler = new AuthorizeSuccessHandler();
 		authorizeSuccessHandler.setTargetUrlParameter("redirect_uri");
+		authorizeSuccessHandler.setSecurity(context.getBean(OFSecurity.class));
 		return authorizeSuccessHandler;
     }
     
@@ -94,6 +95,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     protected AuthorizeFailureHandler authorizeFailureHandler() {
 		AuthorizeFailureHandler authorizeFailureHandler = new AuthorizeFailureHandler();
 		authorizeFailureHandler.setDefaultFailureUrl("/login?error");
+		authorizeFailureHandler.setSecurity(context.getBean(OFSecurity.class));
 		return authorizeFailureHandler;
     }
 

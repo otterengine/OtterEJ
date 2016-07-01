@@ -10,14 +10,29 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
-public class AuthorizeFailureHandler extends SimpleUrlAuthenticationFailureHandler implements AuthenticationFailureHandler {
+import net.otterbase.oframework.base.OFSecurity;
+
+public class AuthorizeFailureHandler extends SimpleUrlAuthenticationFailureHandler
+		implements AuthenticationFailureHandler {
+
+	private OFSecurity security;
+
+	public OFSecurity getSecurity() {
+		return security;
+	}
+
+	public void setSecurity(OFSecurity security) {
+		this.security = security;
+	}
 
 	@Override
-	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-		
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException exception) throws IOException, ServletException {
+
+		if (security != null) {
+			security.onAuthenticationFailure(request, response, exception);
+		}
 		super.onAuthenticationFailure(request, response, exception);
 	}
 
-	
-	
 }
