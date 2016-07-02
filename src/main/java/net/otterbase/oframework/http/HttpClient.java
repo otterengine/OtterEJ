@@ -54,7 +54,6 @@ public class HttpClient {
 
 		}
 		catch(Exception ex) {
-			ex.printStackTrace();
 			result.setSuccess(false);
 		}
 		
@@ -98,7 +97,6 @@ public class HttpClient {
 			result.setData(buffer.toString());
 		}
 		catch(Exception ex) {
-			ex.printStackTrace();
 			result.setSuccess(false);
 		}
 		
@@ -147,7 +145,6 @@ public class HttpClient {
 			result.setData(buffer.toString());
 		}
 		catch(Exception ex) {
-			ex.printStackTrace();
 			result.setSuccess(false);
 		}
 		
@@ -197,7 +194,6 @@ public class HttpClient {
 			result.setData(buffer.toString());
 		}
 		catch(Exception ex) {
-			ex.printStackTrace();
 			result.setSuccess(false);
 		}
 		

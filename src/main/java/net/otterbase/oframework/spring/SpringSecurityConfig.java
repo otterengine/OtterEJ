@@ -57,17 +57,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 				break;
 			}
 			catch(Exception ex) {
+				ex.printStackTrace();
 			}
 		}
+		
+		System.out.println(result);
     	
     	return result;
     }
     
     @Autowired
     @Bean
-    protected TokenBasedRememberMeServices rememberMeServices(OFSecurity security) {
-    	if (security == null) return null;
-    	TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices("otter_remembers", security);
+    protected TokenBasedRememberMeServices rememberMeServices(OFSecurity oSecurity) {
+    	if (oSecurity == null) return null;
+    	TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices("otter_remembers", oSecurity);
     	rememberMeServices.setAlwaysRemember(false);
     	rememberMeServices.setParameter("remember_me");
     	rememberMeServices.setTokenValiditySeconds(900);
@@ -77,9 +80,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     
     @Autowired
     @Bean
-    protected ProviderManager authenticationManager(AuthenticationProvider provider) {
+    protected ProviderManager authenticationManager(OFSecurity oSecurity) {
     	List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
-    	providers.add(context.getBean(OFSecurity.class));
+    	providers.add(oSecurity);
     	return new ProviderManager(providers);
     }
 
@@ -139,13 +142,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
         if (securityPath != null) {
 			ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry security = http.authorizeRequests();
 			for (String key : securityPath.keySet()) {
-				security.regexMatchers(key).access("hasRole('" + StringUtils.join(securityPath.get(key), "','") + "')");
+				security.regexMatchers(key).access("hasAnyRole('" + StringUtils.join(securityPath.get(key), "','") + "')");
 			}
         }
-
-		http.rememberMe()
-			.key("otter_remembers")
-			.rememberMeServices(context.getBean(TokenBasedRememberMeServices.class));
+        
+        TokenBasedRememberMeServices rservice = context.getBean(TokenBasedRememberMeServices.class);
+        if (rservice != null) {
+    		http.rememberMe()
+				.key("otter_remembers")
+				.rememberMeServices(rservice);
+        }
 		
 		http.logout()
 			.logoutUrl("/authorize/destroy")
