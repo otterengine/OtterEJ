@@ -98,7 +98,8 @@ public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		Properties properties = new Properties();
 		for(Object key : OFContext.keySet()) {
 			if (!key.toString().startsWith("webapp.mail.smtp.")) continue;
-			properties.put(key, OFContext.getProperty(key.toString()).trim());
+			String rkey = key.toString().substring(key.toString().indexOf(".") + 1);
+			properties.put(rkey, OFContext.getProperty(key.toString()).trim());
 		}
 		
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

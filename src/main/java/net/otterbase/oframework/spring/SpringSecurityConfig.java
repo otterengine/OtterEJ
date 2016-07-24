@@ -21,7 +21,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 
 import net.otterbase.oframework.OFContext;
 import net.otterbase.oframework.auth.handler.AuthorizeFailureHandler;
@@ -85,6 +89,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     	providers.add(oSecurity);
     	return new ProviderManager(providers);
     }
+    
+    @Bean
+    protected SessionRegistry sessionRegistry() {
+    	return new SessionRegistryImpl();
+    }
+    
+    @Autowired
+    @Bean
+    protected ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlStrategy(SessionRegistry sessionRegistry) {
+    	System.out.println(sessionRegistry);
+    	ConcurrentSessionControlAuthenticationStrategy strategy = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+    	return strategy;
+    }
 
     @Bean
     protected AuthorizeSuccessHandler authorizeSuccessHandler() {
@@ -123,11 +140,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		
 		String sessions = OFContext.getProperty("webapp.security.max_session");
 		
+		SessionManagementConfigurer<HttpSecurity> smc = http.sessionManagement();
+		
+		smc.sessionAuthenticationStrategy(context.getBean(ConcurrentSessionControlAuthenticationStrategy.class));
+		smc.invalidSessionUrl("/");
+		
+		
 		if (sessions != null && !sessions.isEmpty()) {
-			http.sessionManagement()
-				.invalidSessionUrl("/")
-				.maximumSessions(Integer.parseInt(sessions))
-				.expiredUrl("/");
+			smc.maximumSessions(Integer.parseInt(sessions)).expiredUrl("/");
 		}
 				
 		http.formLogin()
