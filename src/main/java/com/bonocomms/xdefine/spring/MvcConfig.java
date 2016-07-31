@@ -35,7 +35,7 @@ import com.bonocomms.xdefine.mail.SMTPMailSender;
 
 @Configuration
 @EnableWebMvc
-@PropertySource("classpath:otter.properties")
+@PropertySource("classpath:xdefine.properties")
 @ComponentScan(basePackages = "${webapp.package}")
 @Import(value = { SpringVelocityConfig.class })
 public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {

@@ -1,7 +1,6 @@
-## OtterEJ – Otter Engine in Java
+## XDefine Framework for Java
 
-
-현재 OtterEngine in Java는 다음 모듈을 사용합니다.
+현재 XDefine Framework는 다음 모듈을 사용합니다.
 - SpringFramework 4.x
 - Hibernate 5.x
 - Velocity 2.x
