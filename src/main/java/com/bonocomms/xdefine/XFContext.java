@@ -19,7 +19,7 @@ public class XFContext {
 		try {
 			Properties p = new Properties();
 			
-			String path = getClass().getResource("/otter.properties").getPath();
+			String path = getClass().getResource("/xdefine.properties").getPath();
 			path = path.substring(0, path.lastIndexOf("/"));
 			
 			File dir = new File(path);
