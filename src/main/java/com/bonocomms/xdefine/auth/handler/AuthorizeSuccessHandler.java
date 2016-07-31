@@ -10,18 +10,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-import com.bonocomms.xdefine.base.OFSecurity;
+import com.bonocomms.xdefine.base.XFSecurity;
 
 public class AuthorizeSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
 		implements AuthenticationSuccessHandler {
 
-	private OFSecurity security;
+	private XFSecurity security;
 
-	public OFSecurity getSecurity() {
+	public XFSecurity getSecurity() {
 		return security;
 	}
 
-	public void setSecurity(OFSecurity security) {
+	public void setSecurity(XFSecurity security) {
 		this.security = security;
 	}
 

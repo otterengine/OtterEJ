@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.bonocomms.xdefine.auth.vo.SignedDetails;
 
-public abstract class OFSecurity implements PasswordEncoder, UserDetailsService, AuthenticationProvider {
+public abstract class XFSecurity implements PasswordEncoder, UserDetailsService, AuthenticationProvider {
 
 	protected SessionFactory sessionFactory;
 

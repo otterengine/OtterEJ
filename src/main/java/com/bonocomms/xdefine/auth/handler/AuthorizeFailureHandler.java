@@ -10,18 +10,18 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
-import com.bonocomms.xdefine.base.OFSecurity;
+import com.bonocomms.xdefine.base.XFSecurity;
 
 public class AuthorizeFailureHandler extends SimpleUrlAuthenticationFailureHandler
 		implements AuthenticationFailureHandler {
 
-	private OFSecurity security;
+	private XFSecurity security;
 
-	public OFSecurity getSecurity() {
+	public XFSecurity getSecurity() {
 		return security;
 	}
 
-	public void setSecurity(OFSecurity security) {
+	public void setSecurity(XFSecurity security) {
 		this.security = security;
 	}
 

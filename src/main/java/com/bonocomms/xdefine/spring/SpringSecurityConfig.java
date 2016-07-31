@@ -30,7 +30,7 @@ import org.springframework.security.web.authentication.session.ConcurrentSession
 import com.bonocomms.xdefine.XFContext;
 import com.bonocomms.xdefine.auth.handler.AuthorizeFailureHandler;
 import com.bonocomms.xdefine.auth.handler.AuthorizeSuccessHandler;
-import com.bonocomms.xdefine.base.OFSecurity;
+import com.bonocomms.xdefine.base.XFSecurity;
 
 @Configuration
 @EnableWebSecurity
@@ -48,15 +48,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 	
 
     @Bean
-    protected OFSecurity getOSecurity() {
+    protected XFSecurity getOSecurity() {
     	
     	Reflections reflections = new Reflections(XFContext.getProperty("webapp.package"));
-		Set<Class<? extends OFSecurity>> subTypes = reflections.getSubTypesOf(OFSecurity.class);
+		Set<Class<? extends XFSecurity>> subTypes = reflections.getSubTypesOf(XFSecurity.class);
 
-		OFSecurity result = null;
+		XFSecurity result = null;
 		for (Class<?> subType : subTypes) {
 			try {
-				result = (OFSecurity) subType.newInstance();
+				result = (XFSecurity) subType.newInstance();
 				result.setSessionFactory(sessionFactory);
 				break;
 			}
@@ -72,7 +72,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     
     @Autowired
     @Bean
-    protected TokenBasedRememberMeServices rememberMeServices(OFSecurity oSecurity) {
+    protected TokenBasedRememberMeServices rememberMeServices(XFSecurity oSecurity) {
     	if (oSecurity == null) return null;
     	TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices("otter_remembers", oSecurity);
     	rememberMeServices.setAlwaysRemember(false);
@@ -84,7 +84,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     
     @Autowired
     @Bean
-    protected ProviderManager authenticationManager(OFSecurity oSecurity) {
+    protected ProviderManager authenticationManager(XFSecurity oSecurity) {
     	List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
     	providers.add(oSecurity);
     	return new ProviderManager(providers);
@@ -107,7 +107,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     protected AuthorizeSuccessHandler authorizeSuccessHandler() {
     	AuthorizeSuccessHandler authorizeSuccessHandler = new AuthorizeSuccessHandler();
 		authorizeSuccessHandler.setTargetUrlParameter("redirect_uri");
-		authorizeSuccessHandler.setSecurity(context.getBean(OFSecurity.class));
+		authorizeSuccessHandler.setSecurity(context.getBean(XFSecurity.class));
 		return authorizeSuccessHandler;
     }
     
@@ -115,20 +115,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     protected AuthorizeFailureHandler authorizeFailureHandler() {
 		AuthorizeFailureHandler authorizeFailureHandler = new AuthorizeFailureHandler();
 		authorizeFailureHandler.setDefaultFailureUrl("/login?error");
-		authorizeFailureHandler.setSecurity(context.getBean(OFSecurity.class));
+		authorizeFailureHandler.setSecurity(context.getBean(XFSecurity.class));
 		return authorizeFailureHandler;
     }
 
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(context.getBean(OFSecurity.class));
+        auth.authenticationProvider(context.getBean(XFSecurity.class));
     }
     
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
-		if (context.getBean(OFSecurity.class) == null) return;
+		if (context.getBean(XFSecurity.class) == null) return;
 
 		http.csrf().disable();
 		http.exceptionHandling().accessDeniedPage(XFContext.getProperty("webapp.security.login_page"));
@@ -158,7 +158,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			.successHandler(context.getBean(AuthorizeSuccessHandler.class))
 			.failureHandler(context.getBean(AuthorizeFailureHandler.class));
 		
-        Map<String, String[]> securityPath = context.getBean(OFSecurity.class).getSecurityPath();
+        Map<String, String[]> securityPath = context.getBean(XFSecurity.class).getSecurityPath();
         if (securityPath != null) {
 			ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry security = http.authorizeRequests();
 			for (String key : securityPath.keySet()) {

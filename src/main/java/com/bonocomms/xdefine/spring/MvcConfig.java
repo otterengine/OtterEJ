@@ -28,7 +28,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.bonocomms.xdefine.XFContext;
-import com.bonocomms.xdefine.base.OFInterceptor;
+import com.bonocomms.xdefine.base.XFInterceptor;
 import com.bonocomms.xdefine.common.interceptor.RequestInterceptor;
 import com.bonocomms.xdefine.file.AttachFileContext;
 import com.bonocomms.xdefine.mail.SMTPMailSender;
@@ -124,9 +124,9 @@ public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		registry.addInterceptor(new RequestInterceptor());
 
 		Reflections reflections = new Reflections(XFContext.getProperty("webapp.package"));
-		for (Class<? extends OFInterceptor> subType : reflections.getSubTypesOf(OFInterceptor.class)) {
+		for (Class<? extends XFInterceptor> subType : reflections.getSubTypesOf(XFInterceptor.class)) {
 			try {
-				OFInterceptor interceptor = subType.newInstance();
+				XFInterceptor interceptor = subType.newInstance();
 				if (interceptor != null) registry.addInterceptor(interceptor);
 			}
 			catch(Exception ex) {
