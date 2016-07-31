@@ -2,13 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.otterbase</groupId>
-	<artifactId>OFramework</artifactId>
-	<version>1.0.8</version>
+	<groupId>com.bonocomms.xdefine</groupId>
+	<artifactId>Framework4J</artifactId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>OtterEJ</name>
-	<url>http://github.com/otterengine</url>
+	<name>Framework4J</name>
+	<url>http://github.com/xdefine</url>
 
 
 	<properties>
@@ -18,7 +18,14 @@
 		<java.version>1.6</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
+	
+	<distributionManagement>
+		<site>
+			<id>nexus</id>
+			<url>dav:http://121.254.170.246:8900/repository/m2/</url>
+		</site>
+	</distributionManagement>
+	
 	<dependencies>
 
 		<!-- Spring Dependencies -->
@@ -218,6 +225,17 @@
 	<build>
 		<plugins>
 			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.4</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-webdav-jackrabbit</artifactId>
+						<version>2.8</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
@@ -228,6 +246,6 @@
 		</plugins>
 	</build>
 	<scm>
-		<url>git@github.com:otterengine/otterEJ</url>
+		<url>git@github.com:xdefine/Framework4J</url>
 	</scm>
 </project>
