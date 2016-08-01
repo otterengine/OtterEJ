@@ -51,12 +51,16 @@ public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
 		logger.info("  ");
 		logger.info(" #############################################################");
+		logger.info("  ");
 		logger.info(" Welcome to X-Define");
-		logger.info(" http://www.xdefine.net");
+		logger.info(" (c) Copyright Bono Communications Inc, Korea");
 		logger.info(" ");
 		logger.info(" Using the Tool can work more convenient.");
 		logger.info(" Detailed information on the framework, please refer to the site.");
 		logger.info(" Thank you.");
+		logger.info(" ");
+		logger.info(" http://www.xdefine.net");
+		logger.info(" ");
 		logger.info(" ");
 		logger.info(" #############################################################");
 		logger.info(" ");
