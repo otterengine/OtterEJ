@@ -10,6 +10,8 @@ import javax.servlet.ServletContext;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -40,11 +42,25 @@ import com.bonocomms.xdefine.mail.SMTPMailSender;
 @Import(value = { SpringVelocityConfig.class })
 public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
+	private Logger logger = LoggerFactory.getLogger("");
 	private ApplicationContext context;
 	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.context = applicationContext;
+
+		logger.info("  ");
+		logger.info(" #############################################################");
+		logger.info(" Welcome to X-Define");
+		logger.info(" http://www.xdefine.net");
+		logger.info(" ");
+		logger.info(" Using the Tool can work more convenient.");
+		logger.info(" Detailed information on the framework, please refer to the site.");
+		logger.info(" Thank you.");
+		logger.info(" ");
+		logger.info(" #############################################################");
+		logger.info(" ");
+		
 	}
 	
 	@Bean

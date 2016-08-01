@@ -65,8 +65,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			}
 		}
 		
-		System.out.println(result);
-    	
     	return result;
     }
     
@@ -74,7 +72,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     @Bean
     protected TokenBasedRememberMeServices rememberMeServices(XFSecurity oSecurity) {
     	if (oSecurity == null) return null;
-    	TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices("otter_remembers", oSecurity);
+    	TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices("xdefine_remembers", oSecurity);
     	rememberMeServices.setAlwaysRemember(false);
     	rememberMeServices.setParameter("remember_me");
     	rememberMeServices.setTokenValiditySeconds(900);
@@ -98,7 +96,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     @Autowired
     @Bean
     protected ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlStrategy(SessionRegistry sessionRegistry) {
-    	System.out.println(sessionRegistry);
     	ConcurrentSessionControlAuthenticationStrategy strategy = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
     	return strategy;
     }
@@ -169,7 +166,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
         TokenBasedRememberMeServices rservice = context.getBean(TokenBasedRememberMeServices.class);
         if (rservice != null) {
     		http.rememberMe()
-				.key("otter_remembers")
+				.key("xdefine_remembers")
 				.rememberMeServices(rservice);
         }
 		

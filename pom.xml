@@ -4,7 +4,7 @@
 
 	<groupId>com.bonocomms.xdefine</groupId>
 	<artifactId>Framework4J</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<packaging>jar</packaging>
 
 	<name>Framework4J</name>
@@ -19,7 +19,7 @@
 		<name>bonocomms</name>
 		<url>http://www.bonocomms.com</url>
 	</organization>
-	
+
 	<properties>
 		<spring.version>4.2.5.RELEASE</spring.version>
 		<spring-security.version>4.1.0.RELEASE</spring-security.version>
@@ -221,6 +221,12 @@
 					<artifactId>log4j</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.7</version>
 		</dependency>
 
 		<dependency>

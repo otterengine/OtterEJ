@@ -30,12 +30,22 @@ public class SpringDatabaseConfig {
 	
 	@Bean(name = "dataSource")
 	public DataSource getDataSource() {
+		
+		String driver = XFContext.getProperty("webapp.db.driver").trim();
+		String jdbcUrl = "";
+		String driverClass = "";
+
+		if (driver.equals("mysql")) {
+			driverClass = "com.mysql.jdbc.Driver";
+			jdbcUrl = "jdbc:mysql://" + XFContext.getProperty("webapp.db.hostname").trim() + "/" + XFContext.getProperty("webapp.db.database").trim() + 
+					"?failOverReadOnly=true&autoReconnect=true&autoReconnectForPools=true&characterEncoding=UTF-8";
+		}
 
 		BasicDataSource dataSource;
 		try {
 			dataSource = new BasicDataSource();
-			dataSource.setDriverClassName(XFContext.getProperty("hibernate.connection.driver_class").trim());
-			dataSource.setUrl(XFContext.getProperty("webapp.db.jdbc_url").trim());
+			dataSource.setDriverClassName(driverClass);
+			dataSource.setUrl(jdbcUrl);
 			dataSource.setUsername(XFContext.getProperty("webapp.db.username").trim());
 			dataSource.setPassword(XFContext.getProperty("webapp.db.password").trim());
 		}
@@ -56,7 +66,25 @@ public class SpringDatabaseConfig {
 		try {
 			sessionBuilder.scanPackages(XFContext.getProperty("webapp.db.package").trim());
 
+			String driver = XFContext.getProperty("webapp.db.driver").trim();
+
 			Properties properties = new Properties();
+			if (driver.equals("mysql")) {
+				properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+				properties.put("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+			}
+			
+			properties.put("hibernate.connection.useUnicode", true);
+			properties.put("hibernate.connection.characterEncoding", "utf-8");
+			
+			properties.put("hibernate.show_sql", false);
+			properties.put("hibernate.current_session_context_class", "thread");
+			properties.put("hibernate.query.substitutions", "true 1,false 0");
+			
+			properties.put("hibernate.cache.use_second_level_cache", true);
+			properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+			properties.put("hibernate.cache.use_query_cache", true);
+			
 			for(Object key : XFContext.keySet()) {
 				if (!key.toString().startsWith("hibernate.")) continue;
 				properties.put(key, XFContext.getProperty(key.toString()).trim());
