@@ -34,11 +34,15 @@ public class SpringDatabaseConfig {
 		String driver = XFContext.getProperty("webapp.db.driver").trim();
 		String jdbcUrl = "";
 		String driverClass = "";
-
+		
 		if (driver.equals("mysql")) {
 			driverClass = "com.mysql.jdbc.Driver";
 			jdbcUrl = "jdbc:mysql://" + XFContext.getProperty("webapp.db.hostname").trim() + "/" + XFContext.getProperty("webapp.db.database").trim() + 
 					"?failOverReadOnly=true&autoReconnect=true&autoReconnectForPools=true&characterEncoding=UTF-8";
+		}
+		else {
+			driverClass = XFContext.getProperty("hibernate.connection.driver_class").trim();
+			jdbcUrl = XFContext.getProperty("webapp.db.jdbc_url").trim();
 		}
 
 		BasicDataSource dataSource;
