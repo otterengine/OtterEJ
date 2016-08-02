@@ -3,9 +3,9 @@
 
 ### Benefit
 
-* 스프링 설정을 쉽고 편리하게 해줄 수 있다. ( like Spring Boot )
-* Framework4J 와 Framework4P의 호환성을 통하여 PHP와 JAVA의 변환이 쉽다.
-* 툴을 사용하여 Scafoldding 처리를 함으로서 쉽고 빠르게 사이트 구축이 가능하다.
+* It can give the "SpringFramework" settings easy and convenient. ( like Spring Boot )
+* Through compatibility with Framework4J, Framework4P easy conversion of PHP and JAVA.
+* Easily and quickly by a process using a site building tools are available.
 
 
 ### Usage Framework & Platform
@@ -18,9 +18,9 @@
 
 ### Install
 
-본 방법은 기본적으로 Maven을 사용하는 자바 프로젝트에 기반하여 작성되었습니다.
+This method was created based on the Java Maven project by default.
 
-* Open pom.xml and add dependency 
+* pom.xml
 
 ```
 <dependency>
@@ -30,7 +30,6 @@
 </dependency>
 ```
 
-* Create setting files.
 * src/main/resources/xdefine.properties
 
 ```
@@ -65,65 +64,68 @@ webapp.mail.password={SMTP PASSWORD}
  
 * src/main/webapp/WEB-INF/web.xml
 ```
-	<web-app ...>
-		<filter>
-		    <filter-name>encodingFilter</filter-name>
-		    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-		    <init-param>
-		        <param-name>encoding</param-name>
-		        <param-value>UTF-8</param-value>
-		    </init-param>
-		</filter>
-		<filter-mapping>
-		    <filter-name>encodingFilter</filter-name>
-		    <url-pattern>/*</url-pattern>
-		</filter-mapping>
-		<filter>
-		    <filter-name>realIPFilter</filter-name>
-		    <filter-class>com.bonocomms.xdefine.common.wrapper.RealIPFilter</filter-class>
-		</filter>
-		<filter-mapping>
-		    <filter-name>realIPFilter</filter-name>
-		    <url-pattern>/*</url-pattern>
-		</filter-mapping>
-		<filter>
-		    <filter-name>springSecurityFilterChain</filter-name>
-		    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		</filter>
-		<filter-mapping>
-		    <filter-name>springSecurityFilterChain</filter-name>
-		    <url-pattern>/*</url-pattern>
-		</filter-mapping>
-		<context-param>
-		    <param-name>contextClass</param-name>
-		    <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
-		</context-param>
-		<context-param>
-		    <param-name>contextConfigLocation</param-name>
-		    <param-value>com.bonocomms.xdefine.spring.RootConfig</param-value>
-		</context-param>
-		<listener>
-		    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-		</listener>
-		<servlet>
-		    <servlet-name>appServlet</servlet-name>
-		    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		    <init-param>
-		        <param-name>contextClass</param-name>
-		        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
-		    </init-param>
-		    <init-param>
-		        <param-name>contextConfigLocation</param-name>
-		        <param-value>com.bonocomms.xdefine.spring.MvcConfig</param-value>
-		    </init-param>
-		    <load-on-startup>1</load-on-startup>
-		</servlet>
-		<servlet-mapping>
-		    <servlet-name>appServlet</servlet-name>
-		    <url-pattern>/*</url-pattern>
-		</servlet-mapping>
-		<distributable />
-	</webapp>
+<web-app ...>
+	<filter>
+	    <filter-name>encodingFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+	    <init-param>
+	        <param-name>encoding</param-name>
+	        <param-value>UTF-8</param-value>
+	    </init-param>
+	</filter>
+	<filter-mapping>
+	    <filter-name>encodingFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter>
+	    <filter-name>realIPFilter</filter-name>
+	    <filter-class>com.bonocomms.xdefine.common.wrapper.RealIPFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>realIPFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter>
+	    <filter-name>springSecurityFilterChain</filter-name>
+	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>springSecurityFilterChain</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<context-param>
+	    <param-name>contextClass</param-name>
+	    <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+	<context-param>
+	    <param-name>contextConfigLocation</param-name>
+	    <param-value>com.bonocomms.xdefine.spring.RootConfig</param-value>
+	</context-param>
+	<listener>
+	    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<servlet>
+	    <servlet-name>appServlet</servlet-name>
+	    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	    <init-param>
+	        <param-name>contextClass</param-name>
+	        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>contextConfigLocation</param-name>
+	        <param-value>com.bonocomms.xdefine.spring.MvcConfig</param-value>
+	    </init-param>
+	    <load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>appServlet</servlet-name>
+	    <url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	<distributable />
+</webapp>
 
 ```
+
+For more information, please refer to the Wiki page.
+
 
