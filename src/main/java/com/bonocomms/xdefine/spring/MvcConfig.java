@@ -1,7 +1,6 @@
 package com.bonocomms.xdefine.spring;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -163,16 +162,16 @@ public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 			ServletContext servletContext = context.getBean(ServletContext.class);
 			File dir = new File(servletContext.getRealPath("/"));
 			
-			FileFilter directoryFilter = new FileFilter() {
-				public boolean accept(File file) {
-					return file.isDirectory();
-				}
-			};
-			
-			for (File file : dir.listFiles(directoryFilter)) {
+			for (File file : dir.listFiles()) {
 				String name = file.getName();
 				if (name.toLowerCase().endsWith("-inf") || name.isEmpty()) continue;
-				registry.addResourceHandler("/" + name + "/**").addResourceLocations("/" + name + "/");
+				
+				if (file.isDirectory()) {
+					registry.addResourceHandler("/" + name + "/**").addResourceLocations("/" + name + "/");
+				}
+				else {
+					registry.addResourceHandler("/" + name).addResourceLocations("/" + name);
+				}
 			}
 		}
 		catch(Exception ex) {

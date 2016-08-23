@@ -63,6 +63,8 @@ public abstract class XFSecurity implements PasswordEncoder, UserDetailsService,
        		principal = this.attemptLogin(username, password);
        	}
        	
+       	if (principal == null) throw new BadCredentialsException("Not matched Password."); 
+       	
 		Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, principal.getAuthorities());
 		return auth;
     }
