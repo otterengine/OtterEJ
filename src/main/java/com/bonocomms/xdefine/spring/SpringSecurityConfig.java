@@ -105,6 +105,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     	AuthorizeSuccessHandler authorizeSuccessHandler = new AuthorizeSuccessHandler();
 		authorizeSuccessHandler.setTargetUrlParameter("redirect_uri");
 		authorizeSuccessHandler.setSecurity(context.getBean(XFSecurity.class));
+		
+		System.out.println(authorizeSuccessHandler);
 		return authorizeSuccessHandler;
     }
     
