@@ -106,14 +106,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		authorizeSuccessHandler.setTargetUrlParameter("redirect_uri");
 		authorizeSuccessHandler.setSecurity(context.getBean(XFSecurity.class));
 		
-		System.out.println(authorizeSuccessHandler);
 		return authorizeSuccessHandler;
     }
     
     @Bean
     protected AuthorizeFailureHandler authorizeFailureHandler() {
 		AuthorizeFailureHandler authorizeFailureHandler = new AuthorizeFailureHandler();
-		authorizeFailureHandler.setDefaultFailureUrl("/login?error");
+		authorizeFailureHandler.setDefaultFailureUrl(XFContext.getProperty("webapp.security.login_page") + "?error");
 		authorizeFailureHandler.setSecurity(context.getBean(XFSecurity.class));
 		return authorizeFailureHandler;
     }
