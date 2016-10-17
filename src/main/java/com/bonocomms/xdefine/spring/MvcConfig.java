@@ -8,6 +8,7 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import org.apache.velocity.app.VelocityEngine;
+import org.hibernate.SessionFactory;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,6 +147,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		for (Class<? extends XFInterceptor> subType : reflections.getSubTypesOf(XFInterceptor.class)) {
 			try {
 				XFInterceptor interceptor = subType.newInstance();
+				interceptor.setSessionFactory(context.getBean(SessionFactory.class));
 				if (interceptor != null) registry.addInterceptor(interceptor);
 			}
 			catch(Exception ex) {

@@ -138,6 +138,14 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 		return this.rowSize - ((this.page - 1) * this.limit) - n;
 	}
 
+	public long getStart() {
+		return 1 + ((page - 1) * limit);
+	}
+	
+	public long getEnd() {
+		long end = (page * limit);
+		return (end > this.rowSize ? this.rowSize : end);
+	}
 
 
 }
