@@ -1,8 +1,16 @@
 package com.bonocomms.xdefine.common;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class Hasher {
 
@@ -209,6 +217,28 @@ public class Hasher {
 			return null;
 		}
 		return password(input.getBytes());
+	}
+	
+	public static String encodeAES128(String input, String password) throws Exception {
+        byte[] plainText = input.toString().getBytes(StandardCharsets.UTF_16LE);
+        PasswordDeriveBytes secretKey = new PasswordDeriveBytes(password, String.valueOf(password.length()).getBytes("ASCII"));
+        
+		SecretKey secureKey = new SecretKeySpec(secretKey.GetBytes(16), "AES");
+		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		c.init(Cipher.ENCRYPT_MODE, secureKey, new IvParameterSpec(secretKey.GetBytes(16)));
+
+		return new String(Base64.encodeBase64(c.doFinal(plainText)));
+	}
+	
+	public static String decodeAES128(String input, String password) throws Exception {
+        byte[] plainText = Base64.decodeBase64(input);
+        PasswordDeriveBytes secretKey = new PasswordDeriveBytes(password, String.valueOf(password.length()).getBytes("ASCII"));
+        
+		SecretKey secureKey = new SecretKeySpec(secretKey.GetBytes(16), "AES");
+		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		c.init(Cipher.DECRYPT_MODE, secureKey, new IvParameterSpec(secretKey.GetBytes(16)));
+
+		return new String(c.doFinal(plainText), StandardCharsets.UTF_16LE);
 	}
 	
 	
