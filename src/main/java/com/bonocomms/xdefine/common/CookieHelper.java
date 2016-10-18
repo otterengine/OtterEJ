@@ -19,21 +19,32 @@ public class CookieHelper {
 	
 	public static CookieHelper instance() {
 		if (_instance == null) _instance = new CookieHelper();
+		_instance.request = ServletContextHolder.getRequest();
+		_instance.response = ServletContextHolder.getResponse();
 		return _instance;
 	}
+	
+	public static CookieHelper sync(HttpServletRequest request, HttpServletResponse response) {
+		if (_instance == null) _instance = new CookieHelper();
+		_instance.request = request;
+		_instance.response = response;
+		return _instance;
+	}
+	
 	
 	private CookieHelper(){
 	}
 
 	public String getCookie(String key) {
 		
-		this.request = ServletContextHolder.getRequest();
-		this.response = ServletContextHolder.getResponse();
+		HttpServletRequest request = ServletContextHolder.getRequest();
+		HttpServletResponse response = ServletContextHolder.getResponse();
+		
+		if (request == null) request = this.request;
+		if (response == null) response = this.response;
 
 		try
-		{
-			HttpServletRequest request = this.request;
-			
+		{			
 			Cookie cookie = null;
 			Cookie[] cookies = request.getCookies();
 			if(cookies != null)
@@ -51,11 +62,14 @@ public class CookieHelper {
 	}
 	public void setCookie(String key, String value) throws UnsupportedEncodingException {
 		
-		this.request = ServletContextHolder.getRequest();
-		this.response = ServletContextHolder.getResponse();
+		HttpServletRequest request = ServletContextHolder.getRequest();
+		HttpServletResponse response = ServletContextHolder.getResponse();
+
+		if (request == null) request = this.request;
+		if (response == null) response = this.response;
 		
 		Cookie cookie = null;
-		Cookie[] cookies = this.request.getCookies();
+		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for(Cookie item : cookies) {
 				if (!item.getName().equals(key)) continue;
