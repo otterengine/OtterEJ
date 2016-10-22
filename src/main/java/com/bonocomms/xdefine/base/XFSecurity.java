@@ -30,8 +30,9 @@ public abstract class XFSecurity implements PasswordEncoder, UserDetailsService,
 	public abstract SignedDetails attemptLogin(String username, String password);
 	
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) { }
-
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) { }
+	public void onAuthenticationDestroy(HttpServletRequest request, HttpServletResponse response, Authentication authentication) { }
+	
 
     @Override
     public boolean supports(Class<?> authentication) {

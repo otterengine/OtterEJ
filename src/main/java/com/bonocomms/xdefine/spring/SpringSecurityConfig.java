@@ -28,8 +28,9 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 
 import com.bonocomms.xdefine.XFContext;
-import com.bonocomms.xdefine.auth.handler.AuthorizeFailureHandler;
-import com.bonocomms.xdefine.auth.handler.AuthorizeSuccessHandler;
+import com.bonocomms.xdefine.auth.handler.AuthCreateFailureHandler;
+import com.bonocomms.xdefine.auth.handler.AuthCreateSuccessHandler;
+import com.bonocomms.xdefine.auth.handler.AuthDestroySuccessHandler;
 import com.bonocomms.xdefine.base.XFSecurity;
 
 @Configuration
@@ -101,8 +102,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     }
 
     @Bean
-    protected AuthorizeSuccessHandler authorizeSuccessHandler() {
-    	AuthorizeSuccessHandler authorizeSuccessHandler = new AuthorizeSuccessHandler();
+    protected AuthCreateSuccessHandler authorizeSuccessHandler() {
+    	AuthCreateSuccessHandler authorizeSuccessHandler = new AuthCreateSuccessHandler();
 		authorizeSuccessHandler.setTargetUrlParameter("redirect_uri");
 		authorizeSuccessHandler.setSecurity(context.getBean(XFSecurity.class));
 		
@@ -110,8 +111,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     }
     
     @Bean
-    protected AuthorizeFailureHandler authorizeFailureHandler() {
-		AuthorizeFailureHandler authorizeFailureHandler = new AuthorizeFailureHandler();
+    protected AuthCreateFailureHandler authorizeFailureHandler() {
+		AuthCreateFailureHandler authorizeFailureHandler = new AuthCreateFailureHandler();
 		authorizeFailureHandler.setDefaultFailureUrl(XFContext.getProperty("webapp.security.login_page") + "?error");
 		authorizeFailureHandler.setSecurity(context.getBean(XFSecurity.class));
 		return authorizeFailureHandler;
@@ -153,8 +154,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			.loginProcessingUrl("/authorize/create")
 			.usernameParameter("username")
 			.passwordParameter("password")
-			.successHandler(context.getBean(AuthorizeSuccessHandler.class))
-			.failureHandler(context.getBean(AuthorizeFailureHandler.class));
+			.successHandler(context.getBean(AuthCreateSuccessHandler.class))
+			.failureHandler(context.getBean(AuthCreateFailureHandler.class));
 		
         Map<String, String[]> securityPath = context.getBean(XFSecurity.class).getSecurityPath();
         if (securityPath != null) {
@@ -174,6 +175,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		http.logout()
 			.logoutUrl("/authorize/destroy")
 			.invalidateHttpSession(true)
+			.logoutSuccessHandler(context.getBean(AuthDestroySuccessHandler.class))
 			.logoutSuccessUrl("/");
 		
 	}

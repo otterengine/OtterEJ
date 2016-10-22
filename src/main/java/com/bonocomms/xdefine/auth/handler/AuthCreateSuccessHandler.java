@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 
 import com.bonocomms.xdefine.base.XFSecurity;
 
-public class AuthorizeSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
+public class AuthCreateSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
 		implements AuthenticationSuccessHandler {
 
 	private XFSecurity security;

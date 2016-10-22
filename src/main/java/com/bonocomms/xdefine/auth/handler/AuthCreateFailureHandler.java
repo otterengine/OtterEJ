@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 
 import com.bonocomms.xdefine.base.XFSecurity;
 
-public class AuthorizeFailureHandler extends SimpleUrlAuthenticationFailureHandler
+public class AuthCreateFailureHandler extends SimpleUrlAuthenticationFailureHandler
 		implements AuthenticationFailureHandler {
 
 	private XFSecurity security;
