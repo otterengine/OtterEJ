@@ -118,6 +118,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		return authorizeFailureHandler;
     }
 
+    @Bean
+    protected AuthDestroySuccessHandler authorizeDestroyHandler() {
+    	AuthDestroySuccessHandler authorizeDestroyHandler = new AuthDestroySuccessHandler();
+    	authorizeDestroyHandler.setSecurity(context.getBean(XFSecurity.class));
+		return authorizeDestroyHandler;
+    }
+
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
