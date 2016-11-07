@@ -7,11 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import com.bonocomms.xdefine.base.XFSecurity;
 
-public class AuthDestroySuccessHandler implements LogoutSuccessHandler {
+public class AuthDestroySuccessHandler implements LogoutSuccessHandler, LogoutHandler {
 
 	private XFSecurity security;
 
@@ -25,7 +26,6 @@ public class AuthDestroySuccessHandler implements LogoutSuccessHandler {
 
 	@Override
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
 		if (authentication != null && authentication.getDetails() != null) {
             try {
             	if (this.security != null) this.security.onAuthenticationDestroy(request, response, authentication);
@@ -34,7 +34,13 @@ public class AuthDestroySuccessHandler implements LogoutSuccessHandler {
                 e.printStackTrace();
             }
         }
- 
+	}
+
+	@Override
+	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+		
+		response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+		response.setHeader("Location", request.getContextPath() + "/");
 	}
 
 }

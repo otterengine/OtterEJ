@@ -181,8 +181,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		
 		http.logout()
 			.logoutUrl("/authorize/destroy")
-			.invalidateHttpSession(true)
 			.logoutSuccessHandler(context.getBean(AuthDestroySuccessHandler.class))
+			.addLogoutHandler(context.getBean(AuthDestroySuccessHandler.class))
 			.logoutSuccessUrl("/");
 		
 	}
