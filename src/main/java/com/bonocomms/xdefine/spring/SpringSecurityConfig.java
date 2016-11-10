@@ -145,14 +145,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 		         .sameOrigin();
 		
 		String sessions = XFContext.getProperty("webapp.security.max_session");
-		
-		SessionManagementConfigurer<HttpSecurity> smc = http.sessionManagement();
-		
-		smc.sessionAuthenticationStrategy(context.getBean(ConcurrentSessionControlAuthenticationStrategy.class));
-		smc.invalidSessionUrl("/");
-		
-		
 		if (sessions != null && !sessions.isEmpty()) {
+			SessionManagementConfigurer<HttpSecurity> smc = http.sessionManagement();
+			
+			smc.sessionAuthenticationStrategy(context.getBean(ConcurrentSessionControlAuthenticationStrategy.class));
+			smc.invalidSessionUrl("/");
 			smc.maximumSessions(Integer.parseInt(sessions)).expiredUrl("/");
 		}
 				
