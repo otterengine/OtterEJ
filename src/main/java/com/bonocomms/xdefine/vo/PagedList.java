@@ -63,12 +63,20 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 	}
 
 	public void setRowSize(Criteria cr) {
-		Iterator<OrderEntry> orderIter = ((CriteriaImpl) cr).iterateOrderings();
-		while (orderIter.hasNext()) {
-		    orderIter.next();
-		    orderIter.remove();
+		try {
+			@SuppressWarnings("unchecked")
+			Iterator<OrderEntry> orderIter = ((CriteriaImpl) cr).iterateOrderings();
+			while (orderIter.hasNext()) {
+			    orderIter.next();
+			    orderIter.remove();
+			}
 		}
-		this.setRowSize((Long) cr.setFirstResult(0).setProjection(Projections.rowCount()).uniqueResult());
+		catch(Exception ex) {
+		}
+		
+		Criteria cr1 = cr.setFirstResult(0).setProjection(Projections.rowCount());
+		Object res = cr1.uniqueResult();
+		this.setRowSize(res == null ? 0 : Long.parseLong(res.toString()));
 	}
 
 	public void setRowSize(long rowSize) {

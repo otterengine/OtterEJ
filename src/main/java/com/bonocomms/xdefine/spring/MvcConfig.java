@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -36,6 +37,7 @@ import com.bonocomms.xdefine.mail.SMTPMailSender;
 @EnableWebMvc
 @PropertySource("classpath:xdefine.properties")
 @ComponentScan(basePackages = "${webapp.package}")
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @Import(value = { SpringVelocityConfig.class })
 @EnableScheduling
 public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
@@ -101,7 +103,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		for (Class<? extends XFInterceptor> subType : reflections.getSubTypesOf(XFInterceptor.class)) {
 			try {
 				XFInterceptor interceptor = subType.newInstance();
-				interceptor.setSessionFactory(context.getBean(SessionFactory.class));
+				interceptor.setSessionFactory((SessionFactory) context.getBean("sessionFactory"));
 				if (interceptor != null) registry.addInterceptor(interceptor);
 			}
 			catch(Exception ex) {

@@ -145,7 +145,7 @@ public class VUCommon {
 	}
 
 	public String cutHTMLString(String str, Integer len) {
-		return cutString(str.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", ""), len);
+		return cutString(str.replaceAll("<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>", "").replaceAll("&nbsp;", "").trim(), len);
 	}
 	
 	public static String getParams(List<String> arr, String prefix) {
