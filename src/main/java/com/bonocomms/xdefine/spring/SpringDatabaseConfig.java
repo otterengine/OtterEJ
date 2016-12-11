@@ -37,6 +37,8 @@ public class SpringDatabaseConfig {
 			driverClass = XFContext.getProperty("hibernate.connection.driver_class").trim();
 			jdbcUrl = XFContext.getProperty("webapp.db.jdbc_url").trim();
 		}
+		
+		if (jdbcUrl.isEmpty()) return null;
 
 		ComboPooledDataSource cpds = new ComboPooledDataSource();
 		try {
@@ -45,10 +47,14 @@ public class SpringDatabaseConfig {
 			cpds.setUser(XFContext.getProperty("webapp.db.username").trim());
 			cpds.setPassword(XFContext.getProperty("webapp.db.password").trim());                                
 				
-			cpds.setMinPoolSize(5);                                     
+			cpds.setMinPoolSize(5);     
+			cpds.setMaxPoolSize(500);                                
 			cpds.setAcquireIncrement(5);
-			cpds.setMaxPoolSize(20);
-			
+			cpds.setAcquireRetryAttempts(5);
+			cpds.setMaxConnectionAge(1800);
+			cpds.setMaxIdleTime(900);
+			cpds.setMaxStatements(1000);
+			cpds.setMaxStatementsPerConnection(100);
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -60,9 +66,8 @@ public class SpringDatabaseConfig {
 	@Autowired
 	@Bean(name = "sessionFactory")
 	public SessionFactory getSessionFactory(DataSource dataSource) {
-		
-		
-		System.out.println("sessionFactory init.");
+
+		if (dataSource == null) return null;
 		
 		LocalSessionFactoryBean sessionBuilder = new LocalSessionFactoryBean();
 
@@ -110,16 +115,23 @@ public class SpringDatabaseConfig {
 		driverClass = XFContext.getProperty("hibernate.connection.driver_class").trim();
 		jdbcUrl = XFContext.getProperty("webapp.db.RO.jdbc_url").trim();
 
+		if (jdbcUrl.isEmpty()) return null;
+
 		ComboPooledDataSource cpds = new ComboPooledDataSource();
 		try {
 			cpds.setDriverClass( driverClass ); //loads the jdbc driver            
 			cpds.setJdbcUrl( jdbcUrl );
 			cpds.setUser(XFContext.getProperty("webapp.db.username").trim());
 			cpds.setPassword(XFContext.getProperty("webapp.db.password").trim());                                
-				
-			cpds.setMinPoolSize(5);                                     
+
+			cpds.setMinPoolSize(5);     
+			cpds.setMaxPoolSize(500);                                
 			cpds.setAcquireIncrement(5);
-			cpds.setMaxPoolSize(20);
+			cpds.setAcquireRetryAttempts(5);
+			cpds.setMaxConnectionAge(1800);
+			cpds.setMaxIdleTime(900);
+			cpds.setMaxStatements(1000);
+			cpds.setMaxStatementsPerConnection(100);
 			
 			cpds.getConnection().setReadOnly(true);
 			cpds.getConnection().setAutoCommit(false);
@@ -134,6 +146,8 @@ public class SpringDatabaseConfig {
 	@Autowired
 	@Bean(name = "sessionFactoryRO")
 	public SessionFactory getSessionFactoryRO(DataSource dataSourceRO) {
+		
+		if (dataSourceRO == null) return null;
 		
 		LocalSessionFactoryBean sessionBuilder = new LocalSessionFactoryBean();
 
@@ -173,7 +187,6 @@ public class SpringDatabaseConfig {
 	@Autowired
 	@Bean(name = "transactionManager")
 	public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
-		System.out.println(sessionFactory);
 		HibernateTransactionManager transactionManager = new HibernateTransactionManager(sessionFactory);
 		return transactionManager;
 	}

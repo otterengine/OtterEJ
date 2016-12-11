@@ -4,7 +4,7 @@
 
 	<groupId>com.bonocomms.xdefine</groupId>
 	<artifactId>Framework4J</artifactId>
-	<version>1.0.17</version>
+	<version>1.0.20</version>
 	<packaging>jar</packaging>
 
 	<name>Framework4J</name>
@@ -87,7 +87,7 @@
 			<artifactId>validation-api</artifactId>
 			<version>1.1.0.Final</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -155,7 +155,7 @@
 			<artifactId>hibernate-ehcache</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
-
+		
 
 		<!-- Spring Security framework -->
 
