@@ -47,5 +47,9 @@ public class SignedDetails extends User implements UserDetails {
 		return userData.getString(key);
 	}
 	
+	public JSONObject getUserData() {
+		return this.userData;
+	}
+	
 	
 }

@@ -94,26 +94,26 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 		// page 표시
 		long min;
 		long max;
-		if (pageSize < 8) {
+		if (pageSize < 6) {
 			min = 1;
 			max = pageSize;
-		} else if (page - 3 > 0) {
-			if (page + 3 < pageSize) {
-				min = page - 3;
-				max = page + 3;
+		} else if (page - 2 > 0) {
+			if (page + 2 < pageSize) {
+				min = page - 2;
+				max = page + 2;
 			} else {
-				min = pageSize - 6;
+				min = pageSize - 4;
 				max = pageSize;
 			}
 		} else {// 필요없을 것 같은데...
-			long value = 4 - page;
+			long value = 3 - page;
 
 			if (page + value > pageSize) {
 				min = 1;
 				max = pageSize;
 			} else {
 				min = 1;
-				max = page + 3 + value;
+				max = page + 2 + value;
 			}
 		}
 		

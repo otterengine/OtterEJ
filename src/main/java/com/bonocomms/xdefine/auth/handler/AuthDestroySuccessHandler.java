@@ -29,7 +29,6 @@ public class AuthDestroySuccessHandler implements LogoutSuccessHandler, LogoutHa
 		if (authentication != null && authentication.getDetails() != null) {
             try {
             	if (this.security != null) this.security.onAuthenticationDestroy(request, response, authentication);
-            	request.getSession().invalidate();
             } catch (Exception e) {
                 e.printStackTrace();
             }

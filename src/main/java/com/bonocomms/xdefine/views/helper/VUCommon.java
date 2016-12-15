@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
-import com.bonocomms.xdefine.common.CookieHelper;
 import com.bonocomms.xdefine.common.wrapper.ServletContextHolder;
 
 import net.sf.json.JSONArray;
@@ -61,11 +60,6 @@ public class VUCommon {
 		String al = request.getHeader("Accept-Language");
 		String acceptLang = (al == null || al.isEmpty()) ? "" : al.substring(0, 2);
 
-		CookieHelper cookie = CookieHelper.instance();
-		if (cookie.getCookie("language") != null && !cookie.getCookie("language").isEmpty()) {
-			acceptLang = cookie.getCookie("language");
-		}
-		
 		try {
 			
 			String langcode;

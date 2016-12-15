@@ -37,26 +37,33 @@ public class CookieHelper {
 
 	public String getCookie(String key) {
 		
-		HttpServletRequest request = ServletContextHolder.getRequest();
-		HttpServletResponse response = ServletContextHolder.getResponse();
+		HttpServletRequest request = this.request;
 		
-		if (request == null) request = this.request;
-		if (response == null) response = this.response;
-
-		try
-		{			
+		StringBuilder sb = new StringBuilder();
+	
+		try {			
+		
 			Cookie cookie = null;
 			Cookie[] cookies = request.getCookies();
 			if(cookies != null)
 				for(Cookie item : cookies) {
-					if (item == null || item.getName() == null || !item.getName().equals(key)) continue;
-					cookie = item;			
+					sb.append(item.getName() + " : " + item.getValue() + "\n");
+					if (item == null || item.getName() == null || !item.getName().trim().equals(key.trim())) continue;
+					cookie = item;
+					break;
 				}
 	
-			if(cookie == null) return null;
-			return URLDecoder.decode(cookie.getValue(), "UTF-8");
+			if(cookie == null) throw new Exception("not found cookie for " + key);
+			
+			String result = URLDecoder.decode(cookie.getValue(), "UTF-8");
+			if (result.startsWith("{AES}")) {
+				result = Hasher.decodeAES128(result.substring(5), "MOETCHAN");
+			}
+			return result;
 		}
 		catch(Exception ex) {
+			System.out.println(sb.toString());
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -76,13 +83,22 @@ public class CookieHelper {
 				cookie = item;			
 			}
 		}
+		
+		String newValue = null;
+		try {
+			newValue = "{AES}" + Hasher.encodeAES128(value, "MOETCHAN");
+		}
+		catch(Exception ex) {
+			newValue = value;
+			ex.printStackTrace();
+		}
 
 		if(cookie == null)  {
-			cookie = new Cookie(key, URLEncoder.encode(value, "UTF-8"));
+			cookie = new Cookie(key, URLEncoder.encode(newValue, "UTF-8"));
 			cookie.setPath("/");
 		}
 		else {
-			cookie.setValue(URLEncoder.encode(value, "UTF-8"));
+			cookie.setValue(URLEncoder.encode(newValue, "UTF-8"));
 			cookie.setPath("/");
 		}
 

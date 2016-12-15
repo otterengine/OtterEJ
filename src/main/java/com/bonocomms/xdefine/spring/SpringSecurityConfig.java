@@ -21,11 +21,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
-import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 
 import com.bonocomms.xdefine.XFContext;
 import com.bonocomms.xdefine.auth.handler.AuthCreateFailureHandler;
@@ -66,19 +61,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			}
 		}
 		
+		System.out.println(result);
     	return result;
-    }
-    
-    @Autowired
-    @Bean
-    protected TokenBasedRememberMeServices rememberMeServices(XFSecurity oSecurity) {
-    	if (oSecurity == null) return null;
-    	TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices("xdefine_remembers", oSecurity);
-    	rememberMeServices.setAlwaysRemember(false);
-    	rememberMeServices.setParameter("remember_me");
-    	rememberMeServices.setTokenValiditySeconds(900);
-    	rememberMeServices.setCookieName("tt");
-    	return rememberMeServices;
     }
     
     @Autowired
@@ -89,17 +73,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     	return new ProviderManager(providers);
     }
     
-    @Bean
-    protected SessionRegistry sessionRegistry() {
-    	return new SessionRegistryImpl();
-    }
-    
-    @Autowired
-    @Bean
-    protected ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlStrategy(SessionRegistry sessionRegistry) {
-    	ConcurrentSessionControlAuthenticationStrategy strategy = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
-    	return strategy;
-    }
 
     @Bean
     protected AuthCreateSuccessHandler authorizeSuccessHandler() {
@@ -133,25 +106,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
     
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-		if (context.getBean(XFSecurity.class) == null) return;
 
 		http.csrf().disable();
+		http.headers().frameOptions().sameOrigin();
+		
+		System.out.println(context.getBean(XFSecurity.class));
+		if (context.getBean(XFSecurity.class) == null) return;
+
 		http.exceptionHandling().accessDeniedPage(XFContext.getProperty("webapp.security.login_page"));
 		
-		http
-		   .headers()
-		      .frameOptions()
-		         .sameOrigin();
-		
-		String sessions = XFContext.getProperty("webapp.security.max_session");
-		if (sessions != null && !sessions.isEmpty()) {
-			SessionManagementConfigurer<HttpSecurity> smc = http.sessionManagement();
-			
-			smc.sessionAuthenticationStrategy(context.getBean(ConcurrentSessionControlAuthenticationStrategy.class));
-			smc.invalidSessionUrl("/");
-			smc.maximumSessions(Integer.parseInt(sessions)).expiredUrl("/");
-		}
 				
 		http.formLogin()
 			.loginPage(XFContext.getProperty("webapp.security.login_page"))
@@ -161,19 +124,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
 			.successHandler(context.getBean(AuthCreateSuccessHandler.class))
 			.failureHandler(context.getBean(AuthCreateFailureHandler.class));
 		
+		http.sessionManagement().sessionFixation().none();
+		
         Map<String, String[]> securityPath = context.getBean(XFSecurity.class).getSecurityPath();
         if (securityPath != null) {
 			ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry security = http.authorizeRequests();
 			for (String key : securityPath.keySet()) {
 				security.regexMatchers(key).access("hasAnyRole('" + StringUtils.join(securityPath.get(key), "','") + "')");
 			}
-        }
-        
-        TokenBasedRememberMeServices rservice = context.getBean(TokenBasedRememberMeServices.class);
-        if (rservice != null) {
-    		http.rememberMe()
-				.key("xdefine_remembers")
-				.rememberMeServices(rservice);
         }
 		
 		http.logout()

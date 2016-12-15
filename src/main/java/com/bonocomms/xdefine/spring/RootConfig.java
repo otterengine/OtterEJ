@@ -21,7 +21,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Configuration
 @EnableAsync
 @EnableWebMvc
-@Import({ SpringDatabaseConfig.class, SpringSecurityConfig.class })
+@Import({ SpringDatabaseConfig.class })
 public class RootConfig implements ApplicationContextAware {
 
 	private Logger logger = LoggerFactory.getLogger("");
