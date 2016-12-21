@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.annotation;
+package com.bonocomms.xdefine.servlet.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

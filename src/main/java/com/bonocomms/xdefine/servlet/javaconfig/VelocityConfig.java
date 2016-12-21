@@ -18,11 +18,11 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.velocity.VelocityConfigurer;
 
 import com.bonocomms.xdefine.XFContext;
-import com.bonocomms.xdefine.annotation.ViewHelper;
 import com.bonocomms.xdefine.servlet.VMLViewResolver;
 import com.bonocomms.xdefine.servlet.VMToolboxView;
-import com.bonocomms.xdefine.views.helper.VUCommon;
-import com.bonocomms.xdefine.views.helper.VUHtmlTag;
+import com.bonocomms.xdefine.servlet.annotations.ViewHelper;
+import com.bonocomms.xdefine.servlet.tools.VUCommon;
+import com.bonocomms.xdefine.servlet.tools.VUHtmlTag;
 import com.bonocomms.xdefine.views.helper.VUSecurity;
 
 @Configuration

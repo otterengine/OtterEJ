@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.base;
+package com.bonocomms.xdefine.servlet.interceptors;
 
 import org.hibernate.SessionFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

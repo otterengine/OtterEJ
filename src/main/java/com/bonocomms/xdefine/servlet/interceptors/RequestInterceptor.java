@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.common.interceptor;
+package com.bonocomms.xdefine.servlet.interceptors;
 
 import java.io.BufferedWriter;
 import java.io.File;

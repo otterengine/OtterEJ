@@ -28,10 +28,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.bonocomms.xdefine.XFContext;
-import com.bonocomms.xdefine.base.XFInterceptor;
-import com.bonocomms.xdefine.common.interceptor.RequestInterceptor;
 import com.bonocomms.xdefine.file.AttachFileContext;
 import com.bonocomms.xdefine.mail.SMTPMailSender;
+import com.bonocomms.xdefine.servlet.interceptors.RequestInterceptor;
+import com.bonocomms.xdefine.servlet.interceptors.XFInterceptor;
 
 @Configuration
 @EnableWebMvc
