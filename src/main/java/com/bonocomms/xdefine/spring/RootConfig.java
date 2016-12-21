@@ -18,10 +18,12 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.bonocomms.xdefine.db.HibernateConfig;
+
 @Configuration
 @EnableAsync
 @EnableWebMvc
-@Import({ SpringDatabaseConfig.class })
+@Import({ HibernateConfig.class })
 public class RootConfig implements ApplicationContextAware {
 
 	private Logger logger = LoggerFactory.getLogger("");

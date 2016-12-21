@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.vo;
+package com.bonocomms.xdefine.servlet.vo;
 
 public class ResultObject {
 	private boolean result;

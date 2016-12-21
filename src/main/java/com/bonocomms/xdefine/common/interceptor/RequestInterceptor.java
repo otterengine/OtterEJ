@@ -17,7 +17,7 @@ import com.bonocomms.xdefine.XFContext;
 import com.bonocomms.xdefine.common.UAgentInfo;
 import com.bonocomms.xdefine.common.wrapper.ServletContextHolder;
 import com.bonocomms.xdefine.http.HttpClient;
-import com.bonocomms.xdefine.vo.ParamData;
+import com.bonocomms.xdefine.servlet.vo.ParamData;
 
 public class RequestInterceptor extends HandlerInterceptorAdapter {
 	

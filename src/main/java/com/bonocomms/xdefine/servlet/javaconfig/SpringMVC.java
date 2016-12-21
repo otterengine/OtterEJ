@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.spring;
+package com.bonocomms.xdefine.servlet.javaconfig;
 
 import java.io.File;
 import java.util.Properties;
@@ -38,9 +38,9 @@ import com.bonocomms.xdefine.mail.SMTPMailSender;
 @PropertySource("classpath:xdefine.properties")
 @ComponentScan(basePackages = "${webapp.package}")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@Import(value = { SpringVelocityConfig.class })
+@Import(value = { VelocityConfig.class })
 @EnableScheduling
-public class MvcConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
 	private ApplicationContext context;
 	

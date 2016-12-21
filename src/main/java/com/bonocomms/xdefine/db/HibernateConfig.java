@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.spring;
+package com.bonocomms.xdefine.db;
 
 import java.util.Properties;
 
@@ -19,7 +19,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableAsync
-public class SpringDatabaseConfig {
+public class HibernateConfig {
 	
 	@Bean(name = "dataSource")
 	public DataSource getDataSource() {

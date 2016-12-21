@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.vo;
+package com.bonocomms.xdefine.db.vo;
 
 import java.util.ArrayList;
 import java.util.Iterator;

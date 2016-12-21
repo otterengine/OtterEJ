@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.spring;
+package com.bonocomms.xdefine.servlet.javaconfig;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,14 +19,14 @@ import org.springframework.web.servlet.view.velocity.VelocityConfigurer;
 
 import com.bonocomms.xdefine.XFContext;
 import com.bonocomms.xdefine.annotation.ViewHelper;
-import com.bonocomms.xdefine.views.VelocityMLViewResolver;
-import com.bonocomms.xdefine.views.VelocityToolboxView;
+import com.bonocomms.xdefine.servlet.VMLViewResolver;
+import com.bonocomms.xdefine.servlet.VMToolboxView;
 import com.bonocomms.xdefine.views.helper.VUCommon;
 import com.bonocomms.xdefine.views.helper.VUHtmlTag;
 import com.bonocomms.xdefine.views.helper.VUSecurity;
 
 @Configuration
-public class SpringVelocityConfig implements ApplicationContextAware {
+public class VelocityConfig implements ApplicationContextAware {
 	
 	private ApplicationContext context;
 
@@ -79,12 +79,12 @@ public class SpringVelocityConfig implements ApplicationContextAware {
 	@Bean
 	public ViewResolver viewResolver() {
 
-		VelocityMLViewResolver resolver = new VelocityMLViewResolver();
+		VMLViewResolver resolver = new VMLViewResolver();
 		resolver.setCache(true);
 		resolver.setSuffix(".vm");
 		resolver.setContentType("text/html; charset=UTF-8");
 		resolver.setExposeSpringMacroHelpers(true);
-		resolver.setViewClass(VelocityToolboxView.class);
+		resolver.setViewClass(VMToolboxView.class);
 		resolver.setToolboxConfigLocation("/WEB-INF/views/tools.xml");
 
 		Map<String, Object> attributes = new HashMap<String, Object>();

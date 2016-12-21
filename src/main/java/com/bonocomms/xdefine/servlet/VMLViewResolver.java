@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.views;
+package com.bonocomms.xdefine.servlet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,10 +10,10 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.velocity.VelocityLayoutView;
 import org.springframework.web.servlet.view.velocity.VelocityViewResolver;
 
-public class VelocityMLViewResolver extends VelocityViewResolver {
+public class VMLViewResolver extends VelocityViewResolver {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(VelocityMLViewResolver.class);
+			.getLogger(VMLViewResolver.class);
 
 	private Map<String, String> mappings = new HashMap<String, String>();
 

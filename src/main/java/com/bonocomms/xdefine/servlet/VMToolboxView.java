@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.views;
+package com.bonocomms.xdefine.servlet;
 
 import java.util.Map;
 
@@ -19,7 +19,7 @@ import org.springframework.web.context.support.ServletContextResource;
  * @author Gregor "hrax" Magdolen
  * @see http://www.elepha.info/elog/archives/305-configuring-velocity-tools-20-in-spring.html
  */
-public class VelocityToolboxView extends org.springframework.web.servlet.view.velocity.VelocityLayoutView {
+public class VMToolboxView extends org.springframework.web.servlet.view.velocity.VelocityLayoutView {
 
 	@Override
 	protected Context createVelocityContext(Map<String, Object> model,

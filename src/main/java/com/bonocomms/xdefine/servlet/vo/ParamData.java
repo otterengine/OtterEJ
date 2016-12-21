@@ -1,4 +1,4 @@
-package com.bonocomms.xdefine.vo;
+package com.bonocomms.xdefine.servlet.vo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
