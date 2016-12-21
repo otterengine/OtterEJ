@@ -1,4 +1,4 @@
-package net.xdefine.file;
+package net.xdefine.tools.vo;
 
 public class AttachFileVO {
 

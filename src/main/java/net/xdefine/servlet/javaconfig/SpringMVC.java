@@ -28,10 +28,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import net.xdefine.XFContext;
-import net.xdefine.file.AttachFileContext;
-import net.xdefine.mail.SMTPMailSender;
 import net.xdefine.servlet.interceptors.RequestInterceptor;
 import net.xdefine.servlet.interceptors.XFInterceptor;
+import net.xdefine.tools.SMTPMailSender;
+import net.xdefine.tools.services.AttachFileContext;
 
 @Configuration
 @EnableWebMvc

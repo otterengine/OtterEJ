@@ -1,4 +1,4 @@
-package net.xdefine.mail;
+package net.xdefine.tools;
 
 import java.util.Map;
 
@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import net.xdefine.XFContext;
+import net.xdefine.tools.threads.MailThread;
 
 public class SMTPMailSender {
 	

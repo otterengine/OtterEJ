@@ -1,4 +1,4 @@
-package net.xdefine.http;
+package net.xdefine.tools.vo;
 
 public class HttpResult {
 

@@ -1,4 +1,4 @@
-package net.xdefine.file;
+package net.xdefine.tools.services;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -28,6 +28,8 @@ import com.mortennobel.imagescaling.ResampleOp;
 import net.sf.jmimemagic.Magic;
 import net.sf.jmimemagic.MagicMatch;
 import net.xdefine.XFContext;
+import net.xdefine.tools.vo.AttachFileVO;
+import net.xdefine.tools.vo.IAttachIndex;
 
 public class AttachFileContext {
 
