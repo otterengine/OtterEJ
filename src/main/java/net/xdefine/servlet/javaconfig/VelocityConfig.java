@@ -18,12 +18,12 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.velocity.VelocityConfigurer;
 
 import net.xdefine.XFContext;
+import net.xdefine.security.utils.VUSecurity;
 import net.xdefine.servlet.VMLViewResolver;
 import net.xdefine.servlet.VMToolboxView;
 import net.xdefine.servlet.annotations.ViewHelper;
 import net.xdefine.servlet.tools.VUCommon;
 import net.xdefine.servlet.tools.VUHtmlTag;
-import net.xdefine.views.helper.VUSecurity;
 
 @Configuration
 public class VelocityConfig implements ApplicationContextAware {

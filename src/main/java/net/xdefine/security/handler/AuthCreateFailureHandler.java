@@ -1,4 +1,4 @@
-package net.xdefine.auth.handler;
+package net.xdefine.security.handler;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
-import net.xdefine.base.XFSecurity;
+import net.xdefine.security.XFSecurity;
 
 public class AuthCreateFailureHandler extends SimpleUrlAuthenticationFailureHandler
 		implements AuthenticationFailureHandler {

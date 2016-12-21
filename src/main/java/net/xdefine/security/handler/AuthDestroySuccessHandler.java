@@ -1,4 +1,4 @@
-package net.xdefine.auth.handler;
+package net.xdefine.security.handler;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import net.xdefine.base.XFSecurity;
+import net.xdefine.security.XFSecurity;
 
 public class AuthDestroySuccessHandler implements LogoutSuccessHandler, LogoutHandler {
 

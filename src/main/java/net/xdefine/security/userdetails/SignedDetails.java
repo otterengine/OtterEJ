@@ -1,4 +1,4 @@
-package net.xdefine.auth.vo;
+package net.xdefine.security.userdetails;
 
 import java.util.Collection;
 

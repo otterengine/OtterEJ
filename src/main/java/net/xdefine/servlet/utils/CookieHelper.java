@@ -8,7 +8,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.xdefine.common.Hasher;
+import net.xdefine.security.utils.Hasher;
 
 public class CookieHelper {
 

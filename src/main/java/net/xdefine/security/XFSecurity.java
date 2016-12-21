@@ -1,4 +1,4 @@
-package net.xdefine.base;
+package net.xdefine.security;
 
 import java.util.Map;
 
@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import net.xdefine.auth.vo.SignedDetails;
+import net.xdefine.security.userdetails.SignedDetails;
 
 public abstract class XFSecurity implements PasswordEncoder, UserDetailsService, AuthenticationProvider {
 

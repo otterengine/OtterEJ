@@ -1,4 +1,4 @@
-package net.xdefine.common;
+package net.xdefine.security.utils;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;

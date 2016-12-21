@@ -23,10 +23,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 import net.xdefine.XFContext;
-import net.xdefine.auth.handler.AuthCreateFailureHandler;
-import net.xdefine.auth.handler.AuthCreateSuccessHandler;
-import net.xdefine.auth.handler.AuthDestroySuccessHandler;
-import net.xdefine.base.XFSecurity;
+import net.xdefine.security.XFSecurity;
+import net.xdefine.security.handler.AuthCreateFailureHandler;
+import net.xdefine.security.handler.AuthCreateSuccessHandler;
+import net.xdefine.security.handler.AuthDestroySuccessHandler;
 
 @Configuration
 @EnableWebSecurity
