@@ -29,29 +29,8 @@ public class XBaseFilter extends CharacterEncodingFilter implements Filter {
 			throws ServletException, IOException {
 
 		HttpServletRequest wrapper = request;
-		if (request instanceof HttpServletRequest) {
-			wrapper = new XRequestWrapper(request, headerName);
-		} 
-
+		if (request instanceof HttpServletRequest) wrapper = new XRequestWrapper(request, headerName);
 		super.doFilterInternal(wrapper, response, filterChain);
 	}
-
-	// protected void doFilter(ServletRequest request, ServletResponse response,
-	// FilterChain chain) throws IOException, ServletException {
-	//
-	//
-	// try {
-	// if (request instanceof HttpServletRequest) {
-	// chain.doFilter(new RealIPRequestWrapper((HttpServletRequest) request),
-	// response);
-	// }
-	// else {
-	// chain.doFilter(request, response);
-	// }
-	// } catch (Exception ex) {
-	// ex.printStackTrace();
-	//// chain.doFilter(request, response);
-	// }
-	// }
 
 }

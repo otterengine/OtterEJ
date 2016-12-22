@@ -1,5 +1,6 @@
 package net.xdefine.security.userdetails.impl;
 
+import net.sf.json.JSONObject;
 import net.xdefine.security.userdetails.Authentication;
 import net.xdefine.security.userdetails.GrantedAuthority;
 
@@ -33,6 +34,13 @@ public class SwitchUserGrantedAuthority implements GrantedAuthority {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return super.toString();
+	}
+	
+	@Override
+	public JSONObject getJSON() {
+		JSONObject result = new JSONObject();
+		result.put("role", this.role);
+		return result;
 	}
 
 }

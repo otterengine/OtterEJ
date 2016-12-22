@@ -37,7 +37,7 @@ public class XFConfiguration implements ApplicationContextAware {
 		logger.info(" #############################################################");
 		logger.info("  ");
 		logger.info(" Welcome to X-Define");
-		logger.info(" (c) Copyright Bono Communications Inc, Korea");
+		logger.info(" (c) Copyright THR Studio Inc, Korea");
 		logger.info(" ");
 		logger.info(" Using the Tool can work more convenient.");
 		logger.info(" Detailed information on the framework, please refer to the site.");
@@ -87,4 +87,7 @@ public class XFConfiguration implements ApplicationContextAware {
 			return null;
 		}
 	}
+	
+	
+	
 }

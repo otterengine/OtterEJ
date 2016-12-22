@@ -50,7 +50,12 @@ public class CookieHelper {
 			return null;
 		}
 	}
+
 	public void setCookie(String key, String value) throws UnsupportedEncodingException {
+		this.setCookie(key, value, -1);
+	}
+	
+	public void setCookie(String key, String value, int expiry) throws UnsupportedEncodingException {
 		
 		Cookie cookie = null;
 		Cookie[] cookies = request.getCookies();
@@ -61,23 +66,16 @@ public class CookieHelper {
 			}
 		}
 		
-		String newValue = null;
-		try {
-			newValue = "{AES}" + Hasher.encodeAES128(value, "MOETCHAN");
-		}
-		catch(Exception ex) {
-			newValue = value;
-			ex.printStackTrace();
-		}
+		String newValue = value;
+		if (value != null && !value.isEmpty()) newValue = URLEncoder.encode(value, "UTF-8");
 
 		if(cookie == null)  {
-			cookie = new Cookie(key, URLEncoder.encode(newValue, "UTF-8"));
-			cookie.setPath("/");
+			cookie = new Cookie(key, newValue);
 		}
-		else {
-			cookie.setValue(URLEncoder.encode(newValue, "UTF-8"));
-			cookie.setPath("/");
-		}
+		
+		cookie.setValue(newValue);
+		cookie.setPath("/");
+		cookie.setMaxAge(expiry);
 
 		response.addCookie(cookie);
 	}

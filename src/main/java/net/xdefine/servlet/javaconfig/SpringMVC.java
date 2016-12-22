@@ -2,6 +2,7 @@ package net.xdefine.servlet.javaconfig;
 
 import java.io.File;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 
@@ -9,6 +10,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.SessionFactory;
 import org.reflections.Reflections;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import net.xdefine.XFContext;
+import net.xdefine.security.XFSecurity;
+import net.xdefine.security.web.AuthorizeController;
 import net.xdefine.servlet.interceptors.RequestInterceptor;
 import net.xdefine.servlet.interceptors.XFInterceptor;
 import net.xdefine.tools.SMTPMailSender;
@@ -57,6 +61,31 @@ public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationCon
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
 		return new CommonsMultipartResolver();
+	}
+
+	@Autowired
+	@Bean
+	protected XFSecurity security(SessionFactory sessionFactory) {
+		Reflections reflections = new Reflections(XFContext.getProperty("webapp.package"));
+		Set<Class<? extends XFSecurity>> subTypes = reflections.getSubTypesOf(XFSecurity.class);
+		
+		XFSecurity result = null;
+		for (Class<?> subType : subTypes) {
+			try {
+				result = (XFSecurity) subType.newInstance();
+				result.setSessionFactory(sessionFactory);
+				break;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		return result;
+	}
+
+	@Bean
+	public AuthorizeController authorizeController() {
+		return new AuthorizeController();
 	}
 
 	@Bean
@@ -94,10 +123,15 @@ public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationCon
 		return sender;
 	}
 	
+	@Bean
+	public RequestInterceptor requestInterceptor() {
+		return new RequestInterceptor();
+	}
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 
-		registry.addInterceptor(new RequestInterceptor());
+		registry.addInterceptor(context.getBean(RequestInterceptor.class));
 
 		Reflections reflections = new Reflections(XFContext.getProperty("webapp.package"));
 		for (Class<? extends XFInterceptor> subType : reflections.getSubTypesOf(XFInterceptor.class)) {

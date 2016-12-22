@@ -1,14 +1,12 @@
 package net.xdefine.security.exceptions;
 
 @SuppressWarnings("serial")
-public class AuthenticationException extends Exception {
+public class AuthenticationException extends IllegalStateException {
+	
+	protected String query;
 
 	public AuthenticationException() {
 		super();
-	}
-
-	public AuthenticationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
 	public AuthenticationException(String message, Throwable cause) {
@@ -23,4 +21,7 @@ public class AuthenticationException extends Exception {
 		super(cause);
 	}
 
+	public String getQuery() {
+		return this.query;
+	}
 }
