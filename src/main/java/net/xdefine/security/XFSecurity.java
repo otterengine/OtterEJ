@@ -2,23 +2,13 @@ package net.xdefine.security;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hibernate.SessionFactory;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import net.xdefine.security.exceptions.AuthenticationException;
+import net.xdefine.security.userdetails.Authentication;
 import net.xdefine.security.userdetails.SignedDetails;
 
-public abstract class XFSecurity implements PasswordEncoder, UserDetailsService, AuthenticationProvider {
+public abstract class XFSecurity {
 
 	protected SessionFactory sessionFactory;
 
@@ -28,23 +18,21 @@ public abstract class XFSecurity implements PasswordEncoder, UserDetailsService,
 
 	public abstract Map<String, String[]> getSecurityPath();
 	public abstract SignedDetails attemptLogin(String username, String password);
-	
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) { }
-	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) { }
-	public void onAuthenticationDestroy(HttpServletRequest request, HttpServletResponse response, Authentication authentication) { }
-	
 
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
-    }
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return this.attemptLogin(username, null);
+	public void onAuthenticationSuccess(Authentication authentication) {
+		
+	}
+	
+	public void onAuthenticationFailure(AuthenticationException exception) {
+		
+	}
+	
+	public void onAuthenticationDestroy(Authentication authentication) { 
+		
 	}
 
-    @Override
+	/*
+	
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     	
         String username = authentication.getName();
@@ -69,6 +57,6 @@ public abstract class XFSecurity implements PasswordEncoder, UserDetailsService,
 		Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, principal.getAuthorities());
 		return auth;
     }
-    
+    */
     
 }
