@@ -8,9 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import net.xdefine.XFContext;
+import net.xdefine.security.Authentication;
 import net.xdefine.security.XFSecurity;
 import net.xdefine.security.exceptions.AuthenticationException;
-import net.xdefine.security.userdetails.Authentication;
 import net.xdefine.servlet.utils.CookieHelper;
 
 @Controller

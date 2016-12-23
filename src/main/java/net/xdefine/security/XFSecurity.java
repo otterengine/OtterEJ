@@ -9,7 +9,6 @@ import org.hibernate.SessionFactory;
 
 import net.xdefine.security.exceptions.AuthenticationException;
 import net.xdefine.security.exceptions.BadCredentialsException;
-import net.xdefine.security.userdetails.Authentication;
 import net.xdefine.security.userdetails.SignedDetails;
 
 public abstract class XFSecurity {

@@ -1,9 +1,10 @@
-package net.xdefine.security.userdetails;
+package net.xdefine.security;
 
 import java.util.Collection;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.xdefine.security.userdetails.SignedDetails;
 import net.xdefine.security.utils.Hasher;
 
 public class Authentication {

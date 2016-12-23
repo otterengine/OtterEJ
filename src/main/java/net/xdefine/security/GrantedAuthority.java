@@ -1,4 +1,4 @@
-package net.xdefine.security.userdetails;
+package net.xdefine.security;
 
 import net.sf.json.JSONObject;
 

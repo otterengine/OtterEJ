@@ -1,7 +1,7 @@
-package net.xdefine.security.userdetails.impl;
+package net.xdefine.security.authority;
 
 import net.sf.json.JSONObject;
-import net.xdefine.security.userdetails.GrantedAuthority;
+import net.xdefine.security.GrantedAuthority;
 
 public class SimpleGrantedAuthority implements GrantedAuthority {
 

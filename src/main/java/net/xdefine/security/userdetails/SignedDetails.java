@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import net.sf.json.JSONObject;
+import net.xdefine.security.GrantedAuthority;
 
 @SuppressWarnings("serial")
 public class SignedDetails implements Serializable {
