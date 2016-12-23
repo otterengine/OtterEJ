@@ -53,7 +53,6 @@ public class ServletContextHolder {
 			return JSONObject.fromObject(objects);
 		}
 		catch(Exception ex) {
-			ex.printStackTrace();
 			return null;
 		}
 	}

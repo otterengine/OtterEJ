@@ -29,21 +29,23 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 		String url = request.getRequestURI();
 		url = url.substring(request.getContextPath().length());
 		
-		Map<String, String[]> maps = security.getSecurityPath();
-		for (String path : maps.keySet()) {
-			Matcher m = Pattern.compile(path).matcher(url);
-			if (m.matches() && !VUSecurity.anyGranted(maps.get(path))) {
-				request.getSession().setAttribute("_securl", url);
-				response.setStatus(302);
-				response.setHeader("Location", request.getContextPath() + XFContext.getProperty("webapp.security.login_page"));
-				ServletContextHolder.removeInstance(Thread.currentThread().hashCode());
-				return false;
+		if (security != null) {
+			Map<String, String[]> maps = security.getSecurityPath();
+			for (String path : maps.keySet()) {
+				Matcher m = Pattern.compile(path).matcher(url);
+				if (m.matches() && !VUSecurity.anyGranted(maps.get(path))) {
+					request.getSession().setAttribute("_securl", url);
+					response.setStatus(302);
+					response.setHeader("Location", request.getContextPath() + XFContext.getProperty("webapp.security.login_page"));
+					ServletContextHolder.removeInstance(Thread.currentThread().hashCode());
+					return false;
+				}
 			}
-		}
-		
-		if (VUSecurity.isSigned()) {
-			CookieHelper cookie = ServletContextHolder.getInstance().getCookieHelper();
-			cookie.setCookie("_xdsec_details", cookie.getCookie("_xdsec_details"), 60 * 30);
+			
+			if (VUSecurity.isSigned()) {
+				CookieHelper cookie = ServletContextHolder.getInstance().getCookieHelper();
+				cookie.setCookie("_xdsec_details", cookie.getCookie("_xdsec_details"), 60 * 30);
+			}
 		}
 		
 		UAgentInfo uaInfo = new UAgentInfo(request.getHeader("user-agent"), null);
