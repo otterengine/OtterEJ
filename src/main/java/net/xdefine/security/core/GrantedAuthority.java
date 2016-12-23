@@ -1,4 +1,4 @@
-package net.xdefine.security;
+package net.xdefine.security.core;
 
 import net.sf.json.JSONObject;
 

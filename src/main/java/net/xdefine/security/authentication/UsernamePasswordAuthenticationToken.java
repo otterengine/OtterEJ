@@ -1,7 +1,9 @@
-package net.xdefine.security;
+package net.xdefine.security.authentication;
 
 import java.util.Collection;
 
+import net.xdefine.security.core.Authentication;
+import net.xdefine.security.core.GrantedAuthority;
 import net.xdefine.security.userdetails.SignedDetails;
 
 public class UsernamePasswordAuthenticationToken extends Authentication {

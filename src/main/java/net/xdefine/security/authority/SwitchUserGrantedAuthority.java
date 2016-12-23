@@ -1,8 +1,8 @@
 package net.xdefine.security.authority;
 
 import net.sf.json.JSONObject;
-import net.xdefine.security.Authentication;
-import net.xdefine.security.GrantedAuthority;
+import net.xdefine.security.core.Authentication;
+import net.xdefine.security.core.GrantedAuthority;
 
 public class SwitchUserGrantedAuthority implements GrantedAuthority {
 

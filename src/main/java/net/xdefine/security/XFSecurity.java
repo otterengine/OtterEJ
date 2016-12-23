@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.SessionFactory;
 
+import net.xdefine.security.authentication.UsernamePasswordAuthenticationToken;
+import net.xdefine.security.core.Authentication;
 import net.xdefine.security.exceptions.AuthenticationException;
 import net.xdefine.security.exceptions.BadCredentialsException;
 import net.xdefine.security.userdetails.SignedDetails;
