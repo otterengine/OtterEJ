@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import net.xdefine.security.core.Authentication;
 import net.xdefine.security.core.GrantedAuthority;
-import net.xdefine.security.userdetails.SignedDetails;
+import net.xdefine.security.core.userdetails.SignedDetails;
 
 public class UsernamePasswordAuthenticationToken extends Authentication {
 

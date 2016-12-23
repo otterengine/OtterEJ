@@ -1,4 +1,4 @@
-package net.xdefine.security.userdetails;
+package net.xdefine.security.core.userdetails;
 
 import java.io.Serializable;
 import java.util.Collection;
