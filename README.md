@@ -11,7 +11,6 @@
 ### Usage Framework & Platform
 
 * SpringFramework 4.x
-* SpringSecurity 4.x
 * Hibernate 5.x
 * Velocity 2.x
 
@@ -111,5 +110,15 @@ webapp.security.max_session=
 ```
 
 For more information, please refer to the Wiki page.
+
+
+
+### Change logs
+
+v1.8 
+- Source Refactoring.
+- Spring Security Removed.
+- login module (based on cookie) added.
+
 
 
