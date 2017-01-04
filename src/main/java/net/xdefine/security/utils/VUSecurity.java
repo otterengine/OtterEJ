@@ -81,6 +81,8 @@ public class VUSecurity {
 		catch(Exception ex) {
 		}
 		
+		System.out.println(roles);
+		
 		return roles;
 	}
 

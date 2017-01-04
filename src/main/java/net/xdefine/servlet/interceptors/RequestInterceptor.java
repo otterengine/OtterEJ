@@ -43,8 +43,11 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 			}
 			
 			if (VUSecurity.isSigned()) {
+				String pfx = XFContext.getProperty("webapp.security.prefix");
+				if (pfx == null) pfx = "";
+				
 				CookieHelper cookie = ServletContextHolder.getInstance().getCookieHelper();
-				cookie.setCookie("_xdsec_details", cookie.getCookie("_xdsec_details"), 60 * 30);
+				cookie.setCookie(pfx + "_xdsec_details", cookie.getCookie(pfx + "_xdsec_details"), 60 * 30);
 			}
 		}
 		

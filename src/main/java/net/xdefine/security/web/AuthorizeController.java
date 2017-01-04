@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import net.sf.json.JSONObject;
 import net.xdefine.XFContext;
 import net.xdefine.security.XFSecurity;
 import net.xdefine.security.core.Authentication;
 import net.xdefine.security.exceptions.AuthenticationException;
+import net.xdefine.security.utils.Hasher;
+import net.xdefine.servlet.ServletContextHolder;
 import net.xdefine.servlet.utils.CookieHelper;
 
 @Controller
@@ -44,13 +47,21 @@ public class AuthorizeController {
 				String sessionid = request.getSession().getId();
 				CookieHelper cookie = new CookieHelper(request, response);
 				
-				cookie.setCookie("_xdsec_details", authentication.getCookieString(sessionid), 60 * 30);
+				
+				String pfx = XFContext.getProperty("webapp.security.prefix");
+				if (pfx == null) pfx = "";
+				
+				String sess = authentication.getCookieString(sessionid);
+				cookie.setCookie(pfx + "_xdsec_details", sess, 60 * 30);
 				
 				if (isRemember) {
-					cookie.setCookie("_xdsec_remember", authentication.getRememberData(), 60 * 60 * 24 * 365);
+					cookie.setCookie(pfx + "_xdsec_remember", authentication.getRememberData(), 60 * 60 * 24 * 365);
 				}
 				
+				security.onAuthenticationSuccess(request, response, JSONObject.fromObject(Hasher.decodeAES128(sess, sessionid)));
+				
 				String _surl = (String) request.getSession().getAttribute("_securl");
+				if (_surl != null && _surl.endsWith("authorize/destroy")) _surl = null;
 				if (redirect_url != null && !redirect_url.isEmpty()) {
 					response.setStatus(302);
 					response.setHeader("Location", request.getContextPath() + redirect_url);
@@ -67,6 +78,7 @@ public class AuthorizeController {
 			
 		}
 		catch(AuthenticationException ex) {
+			security.onAuthenticationFailure(request, response, ex);
 			response.setStatus(302);
 			response.setHeader("Location", url + (url.contains("?") ? "&" : "?") + "error=" + ex.getQuery());
 		}
@@ -82,9 +94,14 @@ public class AuthorizeController {
 	public void destroy(HttpServletRequest request, HttpServletResponse response) {
 
 		try {
+			security.onAuthenticationDestroy(request, response, ServletContextHolder.getInstance().getSecurityJSON());
+
+			String pfx = XFContext.getProperty("webapp.security.prefix");
+			if (pfx == null) pfx = "";
+			
 			CookieHelper cookie = new CookieHelper(request, response);
-			cookie.setCookie("_xdsec_details", null);
-			cookie.setCookie("_xdsec_remember", null);
+			cookie.setCookie(pfx + "_xdsec_details", "", -1);
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

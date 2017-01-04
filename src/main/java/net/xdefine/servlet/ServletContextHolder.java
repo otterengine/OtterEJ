@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
+import net.xdefine.XFContext;
 import net.xdefine.security.utils.Hasher;
 import net.xdefine.servlet.utils.CookieHelper;
 
@@ -48,7 +49,10 @@ public class ServletContextHolder {
 
 	public JSONObject getSecurityJSON() {
 		try {
-			String details = this.getCookieHelper().getCookie("_xdsec_details");
+			String pfx = XFContext.getProperty("webapp.security.prefix");
+			if (pfx == null) pfx = "";
+			
+			String details = this.getCookieHelper().getCookie(pfx + "_xdsec_details");
 			String objects = Hasher.decodeAES128(details, this.request.getSession().getId());
 			return JSONObject.fromObject(objects);
 		}

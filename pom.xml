@@ -4,7 +4,7 @@
 
 	<groupId>com.bonocomms.xdefine</groupId>
 	<artifactId>Framework4J</artifactId>
-	<version>1.8.1</version>
+	<version>1.8.3</version>
 	<packaging>jar</packaging>
 
 	<name>Framework4J</name>
@@ -23,7 +23,6 @@
 	<properties>
 		<spring.version>4.2.8.RELEASE</spring.version>
 		<spring-security.version>4.1.0.RELEASE</spring-security.version>
-		<hibernate.version>4.1.11.Final</hibernate.version>
 		<java.version>1.6</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -136,24 +135,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>2.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-c3p0</artifactId>
-			<version>${hibernate.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-ehcache</artifactId>
-			<version>${hibernate.version}</version>
 		</dependency>
 
 		<!-- Template Engine -->

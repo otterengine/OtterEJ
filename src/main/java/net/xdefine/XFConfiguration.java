@@ -13,26 +13,19 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import net.xdefine.db.HibernateConfig;
-
 @Configuration
 @EnableAsync
 @EnableWebMvc
-@Import({ HibernateConfig.class })
 public class XFConfiguration implements ApplicationContextAware {
 
-	private Logger logger = LoggerFactory.getLogger("");
-	private ApplicationContext context;
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	protected ApplicationContext context;
 	
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.context = applicationContext;
-
+	public XFConfiguration() {
 		logger.info("  ");
 		logger.info(" #############################################################");
 		logger.info("  ");
@@ -48,6 +41,11 @@ public class XFConfiguration implements ApplicationContextAware {
 		logger.info(" ");
 		logger.info(" #############################################################");
 		logger.info(" ");
+	}
+	
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.context = applicationContext;
 	}
 	
 	
@@ -74,7 +72,6 @@ public class XFConfiguration implements ApplicationContextAware {
 			ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 			messageSource.setDefaultEncoding("UTF-8");
 			if (names.size() > 0) {
-				System.out.println(names);
 				String[] nameArray = names.toArray(new String[names.size()]);
 				messageSource.setBasenames(nameArray);
 				messageSource.setCacheSeconds(0);

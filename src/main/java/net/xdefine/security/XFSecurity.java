@@ -5,8 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.SessionFactory;
-
+import net.sf.json.JSONObject;
 import net.xdefine.security.authentication.UsernamePasswordAuthenticationToken;
 import net.xdefine.security.core.Authentication;
 import net.xdefine.security.core.userdetails.SignedDetails;
@@ -15,11 +14,6 @@ import net.xdefine.security.exceptions.BadCredentialsException;
 
 public abstract class XFSecurity {
 
-	protected SessionFactory sessionFactory;
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
 
 	public abstract Map<String, String[]> getSecurityPath();
 	public abstract SignedDetails attemptLogin(String username, String password);
@@ -28,7 +22,7 @@ public abstract class XFSecurity {
 	public abstract boolean matches(String rawPassword, String encodedPassword);
 	
 	
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, JSONObject principal) {
 		
 	}
 	
@@ -36,7 +30,7 @@ public abstract class XFSecurity {
 		
 	}
 	
-	public void onAuthenticationDestroy(HttpServletRequest request, HttpServletResponse response, Authentication authentication) { 
+	public void onAuthenticationDestroy(HttpServletRequest request, HttpServletResponse response, JSONObject principal) { 
 		
 	}
 
