@@ -25,14 +25,10 @@ public class XFConfiguration implements ApplicationContextAware {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected ApplicationContext context;
 	
-	public XFConfiguration() {
-	}
-	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.context = applicationContext;
 	}
-	
 	
 	@Bean
 	public ReloadableResourceBundleMessageSource messageSource() {
@@ -69,7 +65,6 @@ public class XFConfiguration implements ApplicationContextAware {
 			return null;
 		}
 	}
-	
 	
 	
 }
