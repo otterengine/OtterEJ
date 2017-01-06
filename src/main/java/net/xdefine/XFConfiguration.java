@@ -1,70 +1,78 @@
 package net.xdefine;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import com.jolbox.bonecp.BoneCPDataSource;
+
+import net.xdefine.db.XSessionFactory;
+import net.xdefine.db.impl.XSessionFactoryImpl;
+import net.xdefine.db.interceptors.ServiceInterceptor;
 
 @Configuration
 @EnableAsync
 @EnableWebMvc
-public class XFConfiguration implements ApplicationContextAware {
+public class XFConfiguration extends XFConfigSimple {
 
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
-	protected ApplicationContext context;
-	
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.context = applicationContext;
+	private DataSource getDataSource(String suffix) {
+		BoneCPDataSource ds = new BoneCPDataSource();
+	 	ds.setDriverClass(XFContext.getProperty(suffix + ".driver"));
+		ds.setJdbcUrl(XFContext.getProperty(suffix + ".jdbc_url"));
+		ds.setUsername(XFContext.getProperty(suffix + ".username"));
+		ds.setPassword(XFContext.getProperty(suffix + ".password"));
+		ds.setMaxConnectionsPerPartition(5);
+		ds.setMinConnectionsPerPartition(1);
+		ds.setPartitionCount(1);
+		ds.setAcquireIncrement(3);
+		ds.setStatementsCacheSize(100);
+		ds.setDeregisterDriverOnClose(true);
+		ds.setResetConnectionOnClose(true);
+		return ds;
 	}
+
+	private DataSource dataSource;
 	
-	@Bean
-	public ReloadableResourceBundleMessageSource messageSource() {
-		String sep = File.separator;
-		String prefix = sep + "WEB-INF" + sep + "messages";
+	@Bean(name = "sessionFactory")
+	public XSessionFactory sessionFactory() {
 		
-		try {
-			ServletContext servletContext = context.getBean(ServletContext.class);
-			File dir = new File(servletContext.getRealPath("/WEB-INF/messages/"));
-			
-			List<String> names = new ArrayList<String>();
-			if (dir.exists() && dir.listFiles() != null) {
-				for (File file : dir.listFiles()) {
-					if (file == null || !file.isFile()) continue;
-					String name = file.getName();
-					name = name.substring(0, name.lastIndexOf("."));
-					if (name.contains("_")) name = name.substring(0, name.indexOf("_"));
-					if (!names.contains(prefix + sep + name)) names.add(prefix + sep + name);
-				}
+		List<String> dbStrings = new ArrayList<String>();
+		for (String key : XFContext.keySet()) {
+			if (key.startsWith("webapp.db.")) {
+				key = key.substring(0, key.lastIndexOf("."));
+				if (!dbStrings.contains(key)) dbStrings.add(key);
 			}
-			
-			ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-			messageSource.setDefaultEncoding("UTF-8");
-			if (names.size() > 0) {
-				String[] nameArray = names.toArray(new String[names.size()]);
-				messageSource.setBasenames(nameArray);
-				messageSource.setCacheSeconds(0);
-			}
-			
-			return messageSource;
 		}
-		catch(Exception ex) {
-			ex.printStackTrace();
-			return null;
+		
+		Map<String, DataSource> datasources = new HashMap<String, DataSource>();
+		for (String key : dbStrings) {
+			datasources.put(key.substring(key.lastIndexOf(".") + 1), this.getDataSource(key));
 		}
+		
+		if (!datasources.containsKey("default")) throw new IllegalStateException(XFContext.getLanguage("xdefine.language.db.not_found_default"));
+		
+		dataSource = datasources.get("default");
+		return new XSessionFactoryImpl(datasources);
+	}
+
+	@Bean(name = "transactionManager")
+	public DataSourceTransactionManager transactionManager() {
+		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+		return transactionManager;
 	}
 	
+	@Bean(name = "serviceInterceptor") 
+	public ServiceInterceptor serviceInterceptor() {
+		return new ServiceInterceptor();
+	}
 	
 }

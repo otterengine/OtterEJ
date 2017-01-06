@@ -14,7 +14,7 @@ import net.sf.json.JSONObject;
 public class XFContext {
 
 	private static Logger logger = LoggerFactory.getLogger(XFContext.class);
-	private static final String VERSION = "2.0.1-2016.11";
+	private static final String VERSION = "2.0.0-2017.01";
 	private static XFContext _instance;
 	
 	public static XFContext getInstance() {
