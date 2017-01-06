@@ -26,21 +26,6 @@ public class XFConfiguration implements ApplicationContextAware {
 	protected ApplicationContext context;
 	
 	public XFConfiguration() {
-		logger.info("  ");
-		logger.info(" #############################################################");
-		logger.info("  ");
-		logger.info(" Welcome to X-Define");
-		logger.info(" (c) Copyright THR Studio Inc, Korea");
-		logger.info(" ");
-		logger.info(" Using the Tool can work more convenient.");
-		logger.info(" Detailed information on the framework, please refer to the site.");
-		logger.info(" Thank you.");
-		logger.info(" ");
-		logger.info(" http://www.xdefine.net");
-		logger.info(" ");
-		logger.info(" ");
-		logger.info(" #############################################################");
-		logger.info(" ");
 	}
 	
 	@Override
