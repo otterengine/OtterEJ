@@ -20,7 +20,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Configuration
 @EnableAsync
 @EnableWebMvc
-public class XFConfigSimple implements ApplicationContextAware {
+public abstract class XFConfigSimple implements ApplicationContextAware {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected ApplicationContext context;

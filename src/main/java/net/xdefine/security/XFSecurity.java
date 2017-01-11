@@ -14,7 +14,6 @@ import net.xdefine.security.exceptions.BadCredentialsException;
 
 public abstract class XFSecurity {
 
-
 	public abstract Map<String, String[]> getSecurityPath();
 	public abstract SignedDetails attemptLogin(String username, String password);
 

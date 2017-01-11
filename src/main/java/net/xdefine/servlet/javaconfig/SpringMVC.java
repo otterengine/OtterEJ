@@ -27,6 +27,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import net.xdefine.XFContext;
+import net.xdefine.security.XFSecurity;
 import net.xdefine.security.web.AuthorizeController;
 import net.xdefine.servlet.interceptors.RequestInterceptor;
 import net.xdefine.servlet.interceptors.XFInterceptor;
@@ -61,7 +62,14 @@ public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationCon
 
 	@Bean
 	public AuthorizeController authorizeController() {
-		return new AuthorizeController();
+		try {
+			Object o = context.getBean(XFSecurity.class);
+			if (o == null) throw new Exception();
+			return new AuthorizeController();
+		}
+		catch(Exception ex) {
+			return null;
+		}
 	}
 
 	@Bean
@@ -99,27 +107,21 @@ public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationCon
 		return sender;
 	}
 	
-	@Bean
-	public RequestInterceptor requestInterceptor() {
-		return new RequestInterceptor();
-	}
-	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-
-		registry.addInterceptor(context.getBean(RequestInterceptor.class));
+		
+		RequestInterceptor interceptor = new RequestInterceptor();
+		try {
+			interceptor.setSecurity(context.getBean(XFSecurity.class));
+		}
+		catch(Exception ex) {
+			interceptor.setSecurity(null);
+		}
+		registry.addInterceptor(interceptor);
 
 		Reflections reflections = new Reflections(XFContext.getProperty("webapp.package"));
 		for (Class<? extends XFInterceptor> subType : reflections.getSubTypesOf(XFInterceptor.class)) {
-			try {
-//				XFInterceptor interceptor = subType.newInstance();
-//				interceptor.setSessionFactory((SessionFactory) context.getBean("sessionFactory"));
-//				if (interceptor != null) 
-				registry.addInterceptor(context.getBean(subType));
-			}
-			catch(Exception ex) {
-				ex.printStackTrace();
-			}
+			registry.addInterceptor(context.getBean(subType));
 		}
 
 	}

@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import net.xdefine.XFContext;
@@ -19,35 +18,40 @@ import net.xdefine.servlet.utils.UAgentInfo;
 
 public class RequestInterceptor extends HandlerInterceptorAdapter {
 	
-	@Autowired private XFSecurity security;
-	
+	private XFSecurity security;
+	public void setSecurity(XFSecurity security) {
+		this.security = security;
+	}
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 		ServletContextHolder.newInstance(Thread.currentThread().hashCode(), request, response);
 
-		String url = request.getRequestURI();
-		url = url.substring(request.getContextPath().length());
-		
 		if (security != null) {
-			Map<String, String[]> maps = security.getSecurityPath();
-			for (String path : maps.keySet()) {
-				Matcher m = Pattern.compile(path).matcher(url);
-				if (m.matches() && !VUSecurity.anyGranted(maps.get(path))) {
-					request.getSession().setAttribute("_securl", url);
-					response.setStatus(302);
-					response.setHeader("Location", request.getContextPath() + XFContext.getProperty("webapp.security.login_page"));
-					ServletContextHolder.removeInstance(Thread.currentThread().hashCode());
-					return false;
-				}
-			}
+			String url = request.getRequestURI();
+			url = url.substring(request.getContextPath().length());
 			
-			if (VUSecurity.isSigned()) {
-				String pfx = XFContext.getProperty("webapp.security.prefix");
-				if (pfx == null) pfx = "";
+			if (security != null) {
+				Map<String, String[]> maps = security.getSecurityPath();
+				for (String path : maps.keySet()) {
+					Matcher m = Pattern.compile(path).matcher(url);
+					if (m.matches() && !VUSecurity.anyGranted(maps.get(path))) {
+						request.getSession().setAttribute("_securl", url);
+						response.setStatus(302);
+						response.setHeader("Location", request.getContextPath() + XFContext.getProperty("webapp.security.login_page"));
+						ServletContextHolder.removeInstance(Thread.currentThread().hashCode());
+						return false;
+					}
+				}
 				
-				CookieHelper cookie = ServletContextHolder.getInstance().getCookieHelper();
-				cookie.setCookie(pfx + "_xdsec_details", cookie.getCookie(pfx + "_xdsec_details"), 60 * 30);
+				if (VUSecurity.isSigned()) {
+					String pfx = XFContext.getProperty("webapp.security.prefix");
+					if (pfx == null) pfx = "";
+					
+					CookieHelper cookie = ServletContextHolder.getInstance().getCookieHelper();
+					cookie.setCookie(pfx + "_xdsec_details", cookie.getCookie(pfx + "_xdsec_details"), 60 * 30);
+				}
 			}
 		}
 		
