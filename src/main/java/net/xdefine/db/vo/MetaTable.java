@@ -7,6 +7,7 @@ public class MetaTable {
 
 	private String name;
 	private String unique;
+	private String join;
 	private List<MetaColumn> properties = new ArrayList<MetaColumn>();
 
 	public String getName() {
@@ -23,6 +24,14 @@ public class MetaTable {
 
 	public void setUnique(String unique) {
 		this.unique = unique;
+	}
+
+	public String getJoin() {
+		return join;
+	}
+
+	public void setJoin(String join) {
+		this.join = join;
 	}
 
 	public List<MetaColumn> getProperties() {

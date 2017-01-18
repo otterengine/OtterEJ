@@ -31,13 +31,17 @@ public class XFConfiguration extends XFConfigSimple {
 		ds.setJdbcUrl(XFContext.getProperty(suffix + ".jdbc_url"));
 		ds.setUsername(XFContext.getProperty(suffix + ".username"));
 		ds.setPassword(XFContext.getProperty(suffix + ".password"));
-		ds.setMaxConnectionsPerPartition(5);
+		ds.setMaxConnectionsPerPartition(20);
 		ds.setMinConnectionsPerPartition(1);
 		ds.setPartitionCount(1);
 		ds.setAcquireIncrement(3);
 		ds.setStatementsCacheSize(100);
 		ds.setDeregisterDriverOnClose(true);
 		ds.setResetConnectionOnClose(true);
+		ds.setIdleConnectionTestPeriodInSeconds(60);
+		ds.setConnectionTestStatement("SELECT 1");
+		ds.setTransactionRecoveryEnabled(true);
+		ds.setDisableConnectionTracking(true);
 		return ds;
 	}
 

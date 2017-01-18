@@ -21,6 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.xdefine.XFContext;
 import net.xdefine.db.XSession;
@@ -40,7 +41,6 @@ public class XSessionFactoryImpl implements XSessionFactory {
 		try {
 			boolean isChange = false;
 			File jsonTables = new File(XFContext.getProperty("webapp.file.path") + "/.xdefine/tables.json");
-			long modifyDate = jsonTables.lastModified();
 			if (jsonTables.exists()) {
 				FileInputStream inputStream = new FileInputStream(jsonTables);
 				entities = JSONObject.fromObject(IOUtils.toString(inputStream, "UTF-8"));
@@ -53,31 +53,53 @@ public class XSessionFactoryImpl implements XSessionFactory {
 			ClassLoader classLoader = getClass().getClassLoader();
 			File tables = new File(classLoader.getResource("xdefine/tables").getFile());
 			for (File table : tables.listFiles()) {
-				if (table.lastModified() < modifyDate)
-					continue;
-
+				
 				JSONObject jTable = new JSONObject();
 
 				InputSource is = new InputSource(new FileReader(table));
 				Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
 
-				Node entity = (Node) xpath.compile("/entity").evaluate(document, XPathConstants.NODE);
+				Node entity = (Node) xpath.compile("//entity").evaluate(document, XPathConstants.NODE);
 
-				jTable.put("name", entity.getAttributes().getNamedItem("name").getNodeValue());
-				jTable.put("catalog", entity.getAttributes().getNamedItem("catalog").getNodeValue());
-				jTable.put("table", entity.getAttributes().getNamedItem("table").getNodeValue());
+				jTable.put("name", nv(entity.getAttributes().getNamedItem("name")));
+				jTable.put("catalog", nv(entity.getAttributes().getNamedItem("catalog")));
+				jTable.put("table", nv(entity.getAttributes().getNamedItem("table")));
 
+				JSONObject filters = new JSONObject();
+				JSONArray columns = new JSONArray();
 				NodeList items = entity.getChildNodes();
-				
 				for (int i = 0; i < items.getLength(); i++) {
+					JSONObject column = new JSONObject();
+					if (items.item(i).getNodeName().startsWith("#")) continue;
+					column.put("name", nv(items.item(i).getAttributes().getNamedItem("name")));
+					column.put("type", nv(items.item(i).getAttributes().getNamedItem("type")));
+					column.put("not-null", nv(items.item(i).getAttributes().getNamedItem("not-null")));
+					column.put("unique", nv(items.item(i).getAttributes().getNamedItem("unique")));
 					
-					System.out.println(items.item(i).getNodeName());
-					
+					NodeList options = items.item(i).getChildNodes();
+					for (int j = 0; j < options.getLength(); j++) {
+						if (options.item(j).getNodeName().equals("#text")) continue;
+						if (options.item(j).getNodeName().equals("column")) {
+							column.put("db-var", options.item(j).getChildNodes().item(0).getNodeValue());
+						}
+						else if (options.item(j).getNodeName().equals("formula")) {
+							column.put("db-var", "(" + options.item(j).getChildNodes().item(0).getNodeValue() + ")");
+						}
+						else if (options.item(j).getNodeName().equals("filter")) {
+							String filtername = options.item(j).getChildNodes().item(0).getNodeValue();
+							if (filtername == null) continue;
+							if (!filters.containsKey(filtername)) {
+								filters.put(filtername, new JSONArray());
+							}
+							filters.getJSONArray(filtername).add(column.getString("name"));
+						}
+					}
+					columns.add(column);
 				}
-				// catalog="khan" table="account" name="account">
-
-				// JSONObject jTable = JSONObject.fromObject(new
-				// XMLSerializer().readFromFile(table));
+				
+				jTable.put("columns", columns);
+				jTable.put("filters", filters);
+				
 				entities.put(jTable.getString("name"), jTable);
 				isChange = true;
 			}
@@ -95,6 +117,10 @@ public class XSessionFactoryImpl implements XSessionFactory {
 			ex.printStackTrace();
 		}
 
+	}
+	
+	private String nv(Node node) {
+		return node == null ? null : node.getNodeValue();
 	}
 
 	@Override

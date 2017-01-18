@@ -1,11 +1,19 @@
 package net.xdefine.db.drivers.mysql;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import net.sf.json.JSONObject;
+import net.xdefine.db.criterion.Criterion;
 import net.xdefine.db.impl.XSessionImpl;
 import net.xdefine.db.utils.XQuery;
 import net.xdefine.db.utils.XQueryImpl;
+import net.xdefine.db.vo.MetaColumn;
 import net.xdefine.db.vo.MetaTable;
+import net.xdefine.db.vo.QueryObject;
 
 public class XQueryForMySQL extends XQueryImpl {
 
@@ -22,18 +30,57 @@ public class XQueryForMySQL extends XQueryImpl {
 	}
 
 	@Override
-	protected String generateQuery(List<MetaTable> metadatas) {
+	protected QueryObject generateQuery(List<MetaTable> metadatas) {
 		
-		/*
-		StringBuilder sb = new StringBuilder();
-		for (String field : fields) {
-			if (!sb.toString().isEmpty()) sb.append(", ");
-			sb.append("_this.`" + field + "`");
+		QueryObject object = new QueryObject();
+		
+		MetaTable def = metadatas.get(0);
+		Map<String, JSONObject> fieldObjects = new HashMap<String, JSONObject>();
+		
+		StringBuilder fields = new StringBuilder();
+		for (MetaColumn field : def.getProperties()) {
+			if (!fields.toString().isEmpty()) fields.append(", ");
+			
+			if (field.getName().startsWith("(")) {
+				fields.append(field.getName() + " " + field.getAlias());
+				
+			}
+			else {
+				fields.append(def.getUnique().trim() + ".`" + field.getName() + "` " + field.getAlias());
+			}
+			
+			
+			String alias = field.getAlias().substring(def.getUnique().trim().length() + 1);
+			fieldObjects.put(alias, field.getObject());
 		}
 		
-		return "SELECT " + sb.toString() + " FROM " + tableName + " _this";*/
+		Pattern p = Pattern.compile("\\$\\{([a-zA-Z0-9\\-\\_\\.]*)\\}");
 		
-		return null;
+		StringBuilder options = new StringBuilder();
+		for (Criterion criterion : criterions) {
+			options.append((!options.toString().isEmpty()) ? " AND " : " WHERE ");
+			
+			boolean success = true;
+			QueryObject sub = criterion.toSQLString();
+			String query = sub.getQuery();
+			Matcher m = p.matcher(query);
+			while(m.find()) {
+				if (!fieldObjects.containsKey(m.group(1).trim())){
+					System.out.println(m.group(1));
+					success = false;
+					continue;
+				}
+				JSONObject field = fieldObjects.get(m.group(1).trim());
+				query = query.replaceAll("\\$\\{" + m.group(1).trim() + "\\}", field.getString("db-var"));
+			}
+			if (success) {
+				object.getData().addAll(sub.getData());
+				options.append(query);
+			}
+		}
+		
+		object.setQuery("SELECT " + fields.toString() + " FROM " + def.getName() + " " + def.getUnique().trim() + options);
+		return object;
 	}
 
 	@Override
@@ -55,5 +102,6 @@ public class XQueryForMySQL extends XQueryImpl {
 		
 		return sb.toString();
 	}
+
 
 }

@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -221,12 +223,16 @@ public class XSessionImpl implements XSession {
 		return new XQueryForMySQL(this, XQuery.Mode.BUILDER, name, clazz);
 	}
 
-	public ResultSet createResultset(String queryString) {
+	public ResultSet createResultset(String queryString, List<Object> params) {
 		try {
-			if (statement == null)
-				statement = connection.createStatement();
-
-			return statement.executeQuery(queryString);
+			
+			PreparedStatement statement = connection.prepareStatement(queryString);
+			for(int i = 1; i <= params.size(); i++) {
+				statement.setObject(i, params.get(i - 1));
+			}
+			
+			this.statement = statement;
+			return statement.executeQuery();
 		} catch (SQLException e) {
 			throw new IllegalStateException(e);
 		}

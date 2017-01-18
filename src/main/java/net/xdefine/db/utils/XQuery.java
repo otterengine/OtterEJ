@@ -1,19 +1,16 @@
 package net.xdefine.db.utils;
 
-import java.util.Collection;
-
+import net.xdefine.db.criterion.Criterion;
 import net.xdefine.db.vo.PagedList;
 
 @SuppressWarnings("rawtypes")
 public interface XQuery {
-
-	XQuery setParameter(String name, Object value);
-
-	XQuery setParameter(String name, Collection value);
-
+	
 	XQuery setMaxResult(int max);
 
 	XQuery setFirstResult(int start);
+	
+	XQuery add(Criterion restriction);
 
 	PagedList list();
 

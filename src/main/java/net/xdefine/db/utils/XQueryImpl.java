@@ -1,21 +1,18 @@
 package net.xdefine.db.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import net.sf.json.JSONObject;
-import net.xdefine.db.annotations.Column;
+import net.xdefine.db.criterion.Criterion;
 import net.xdefine.db.impl.XSessionFactoryImpl;
 import net.xdefine.db.impl.XSessionImpl;
 import net.xdefine.db.vo.DynamicRow;
-import net.xdefine.db.vo.PagedList;
+import net.xdefine.db.vo.MetaColumn;
 import net.xdefine.db.vo.MetaTable;
+import net.xdefine.db.vo.PagedList;
+import net.xdefine.db.vo.QueryObject;
 
 @SuppressWarnings("rawtypes")
 public abstract class XQueryImpl implements XQuery {
@@ -24,6 +21,8 @@ public abstract class XQueryImpl implements XQuery {
 	private XSessionImpl session;
 	private XQuery.Mode mode;
 	private Class<?> clazz = null;
+	
+	protected List<Criterion> criterions = new ArrayList<Criterion>();
 	
 	protected String args;
 	
@@ -48,17 +47,6 @@ public abstract class XQueryImpl implements XQuery {
 		this.args = args;
 		this.clazz = clazz;
 	}
-
-	@Override
-	public XQuery setParameter(String name, Collection value) {
-		return this.setParameter(name, "(" + StringUtils.join(value, ",") + ")");
-	}
-
-	@Override
-	public XQuery setParameter(String name, Object value) {
-		
-		return this;
-	}
 	
 	@Override
 	public XQuery setMaxResult(int max) {
@@ -72,27 +60,36 @@ public abstract class XQueryImpl implements XQuery {
 		return this;
 	}
 	
-	protected String getQuery() {
-		String queryString = null;
+	protected QueryObject getQuery() {
+		QueryObject queryString = null;
 		if (this.mode == XQuery.Mode.NATIVE_QUERY) {
-			queryString = this.args;
+			queryString = new QueryObject(this.args);
 		}
 		else if (this.mode == XQuery.Mode.BUILDER) {
 			
 			List<MetaTable> metas = new ArrayList<MetaTable>();
 			JSONObject table = this.sessionFactory.entities.getJSONObject(this.args);
 			
+			
 			int i = 1;
-			MetaTable meta = new MetaTable();
-			meta.setUnique("_0x" + String.format("%02X%n", i));
-			meta.setName(this.args);
-			metas.add(meta);
+			MetaTable def = new MetaTable();
+			def.setUnique("_0x" + String.format("%02X%n", i).trim());
+			if (table.containsKey("catalog")) {
+				def.setName(table.getString("catalog") + "." + table.getString("table"));
+			}
+			else {
+				def.setName(table.getString("table"));
+			}
 			
-			System.out.println(table);
+			metas.add(def);
 			
-			for (Object object : table.getJSONArray("property")) {
-				System.out.println(((JSONObject) object));
-//				meta.getProperties().add(((JSONObject) object).getJSONObject("column").getString("@name"));
+			for (Object object : table.getJSONArray("columns")) {
+				JSONObject data = (JSONObject) object;
+				MetaColumn column = new MetaColumn();
+				column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
+				column.setName(data.getString("db-var"));
+				column.setObject(data);
+				def.getProperties().add(column);
 			}
 			
 			queryString = this.generateQuery(metas);
@@ -101,7 +98,7 @@ public abstract class XQueryImpl implements XQuery {
 		return queryString;
 	}
 
-	protected abstract String generateQuery(List<MetaTable> metadatas);
+	protected abstract QueryObject generateQuery(List<MetaTable> metadatas);
 	protected abstract String appendRowControlQuery(String queryString);
 
 	@Override
@@ -114,81 +111,56 @@ public abstract class XQueryImpl implements XQuery {
 	public PagedList list(Class<?> resultClass) {
 		
 		if (resultClass == null) resultClass = this.clazz;
-		
-		String queryString = this.getQuery();
-		if (this.start >= 0 || this.length >= 0) {
-			queryString = this.appendRowControlQuery(queryString);
+
+		List<MetaTable> metaTables = null;
+		QueryObject queryString = null;
+		if (this.mode == XQuery.Mode.NATIVE_QUERY) {
+			queryString = new QueryObject(this.args);
+		}
+		else if (this.mode == XQuery.Mode.BUILDER) {
+			metaTables = new ArrayList<MetaTable>();
+			JSONObject table = this.sessionFactory.entities.getJSONObject(this.args);
+
+			int i = 1;
+			MetaTable def = new MetaTable();
+			def.setUnique("_0x" + String.format("%02X%n", i).trim());
+			if (table.containsKey("catalog")) {
+				def.setName(table.getString("catalog") + "." + table.getString("table"));
+			}
+			else {
+				def.setName(table.getString("table"));
+			}
+			
+			metaTables.add(def);
+			
+			for (Object object : table.getJSONArray("columns")) {
+				JSONObject data = (JSONObject) object;
+				MetaColumn column = new MetaColumn();
+				column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
+				column.setName(data.getString("db-var"));
+				column.setObject(data);
+				def.getProperties().add(column);
+			}
+			
+			queryString = this.generateQuery(metaTables);
 		}
 		
-		System.out.println("XQUERY :: " + queryString);
+		if (this.start >= 0 || this.length >= 0) {
+			queryString.setQuery(this.appendRowControlQuery(queryString.getQuery()));
+		}
+		
+		System.out.println("XQUERY :: " + queryString.getQuery());
 		
 		try {
 			PagedList result = new PagedList();
-			ResultSet rs = this.session.createResultset(queryString);
+			ResultSet rs = this.session.createResultset(queryString.getQuery(), queryString.getData());
 			while(rs.next()) {
+				DynamicRow dr = new DynamicRow(rs, metaTables);
 				if (this.clazz == null && resultClass == null) {
-					result.add(new DynamicRow(rs));
+					result.add(dr);
 				}
 				else {
-					Object row = resultClass.newInstance();
-					for (Field field : resultClass.getFields()) {
-						if (field.getAnnotation(Column.class) == null) continue;
-						//field.getAnnotation(DBField.class)
-					}
-					for (Method method : resultClass.getMethods()) {
-						if (method.getAnnotation(Column.class) == null) continue;
-						Column dbf = method.getAnnotation(Column.class);
-						
-						String name = method.getName();
-						if (name.startsWith("get") || name.startsWith("set"))	
-							name = "set" + name.substring(3);
-						else if (name.startsWith("is"))
-							name = "set" + name.substring(2);
-						
-						String paramType = method.getReturnType().toString();
-						if (!paramType.contains(".") && paramType.startsWith(paramType.substring(0, 1).toLowerCase())) {
-							// int, long, double, float 등.. 
-							
-							if (paramType.equals("long")) {
-								long value = ((Long) rs.getObject(dbf.name())).longValue();
-								resultClass.getMethod(name, method.getReturnType()).invoke(row, value);
-							}
-							else if (paramType.equals("int")) {
-								int value = ((Integer) rs.getObject(dbf.name())).intValue();
-								resultClass.getMethod(name, method.getReturnType()).invoke(row, value);
-							}
-							else if (paramType.equals("float")) {
-								float value = ((Double) rs.getObject(dbf.name())).floatValue();
-								resultClass.getMethod(name, method.getReturnType()).invoke(row, value);
-							}
-							else if (paramType.equals("double")) {
-								double value = ((Double) rs.getObject(dbf.name())).doubleValue();
-								resultClass.getMethod(name, method.getReturnType()).invoke(row, value);
-							}
-							else if (paramType.equals("boolean")) {
-								boolean value = ((Boolean) rs.getObject(dbf.name())).booleanValue();
-								resultClass.getMethod(name, method.getReturnType()).invoke(row, value);
-							}
-							else if (paramType.equals("byte")) {
-								byte value = ((Byte) rs.getObject(dbf.name())).byteValue();
-								resultClass.getMethod(name, method.getReturnType()).invoke(row, value);
-							}
-							else if (paramType.equals("short")) {
-								short value = ((Short) rs.getObject(dbf.name())).shortValue();
-								resultClass.getMethod(name, method.getReturnType()).invoke(row, value);
-							}
-							else {
-								System.out.println(paramType);
-								System.out.println(name);
-							}
-						}
-						else {
-							Object value = method.getReturnType().cast(rs.getObject(dbf.name()));
-							resultClass.getMethod(name, method.getReturnType()).invoke(row, value);
-						}
-						
-					}
-					result.add(row);
+					result.add(dr.assignObject(resultClass));
 				}
 			}
 			rs.close();
@@ -222,10 +194,7 @@ public abstract class XQueryImpl implements XQuery {
 	@Override
 	public int executeUpdate() {
 
-		String queryString = this.getQuery();
-		if (this.start > 0 && this.length > 0) {
-			queryString = this.appendRowControlQuery(queryString);
-		}
+		String queryString = this.getQuery().getQuery();
 		
 		try {
 			int result = this.session.execute(queryString);
@@ -236,7 +205,12 @@ public abstract class XQueryImpl implements XQuery {
 		}
 
 	}
-	
+
+	@Override
+	public XQuery add(Criterion restriction) {
+		criterions.add(restriction);
+		return this;
+	}
 	
 
 }
