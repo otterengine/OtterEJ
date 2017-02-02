@@ -85,6 +85,11 @@ public class XSessionFactoryImpl implements XSessionFactory {
 						else if (options.item(j).getNodeName().equals("formula")) {
 							column.put("db-var", "(" + options.item(j).getChildNodes().item(0).getNodeValue() + ")");
 						}
+						else if (options.item(j).getNodeName().equals("join-table")) {
+							column.put("join-table", options.item(j).getAttributes().getNamedItem("target-name").getNodeValue().toString());
+							column.put("join-filter", options.item(j).getAttributes().getNamedItem("target-filter").getNodeValue().toString());
+							column.put("join-var", options.item(j).getChildNodes().item(0).getNodeValue());
+						}
 						else if (options.item(j).getNodeName().equals("filter")) {
 							String filtername = options.item(j).getChildNodes().item(0).getNodeValue();
 							if (filtername == null) continue;

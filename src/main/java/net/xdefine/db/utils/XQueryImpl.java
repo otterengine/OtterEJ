@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.xdefine.db.criterion.Criterion;
 import net.xdefine.db.impl.XSessionFactoryImpl;
@@ -71,6 +72,8 @@ public abstract class XQueryImpl implements XQuery {
 			JSONObject table = this.sessionFactory.entities.getJSONObject(this.args);
 			
 			
+			System.out.println(table);
+			
 			int i = 1;
 			MetaTable def = new MetaTable();
 			def.setUnique("_0x" + String.format("%02X%n", i).trim());
@@ -85,6 +88,9 @@ public abstract class XQueryImpl implements XQuery {
 			
 			for (Object object : table.getJSONArray("columns")) {
 				JSONObject data = (JSONObject) object;
+				
+				System.out.println(data);
+				
 				MetaColumn column = new MetaColumn();
 				column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
 				column.setName(data.getString("db-var"));
@@ -135,11 +141,42 @@ public abstract class XQueryImpl implements XQuery {
 			
 			for (Object object : table.getJSONArray("columns")) {
 				JSONObject data = (JSONObject) object;
-				MetaColumn column = new MetaColumn();
-				column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
-				column.setName(data.getString("db-var"));
-				column.setObject(data);
-				def.getProperties().add(column);
+				
+				if (data.containsKey("join-table")) {
+					i++;
+					JSONObject jt = this.sessionFactory.entities.getJSONObject(data.getString("join-table"));
+					MetaTable jtm = new MetaTable();
+					jtm.setUnique("_0x" + String.format("%02X%n", i).trim());
+					jtm.setName((jt.containsKey("catalog") ? (table.getString("catalog") + ".") : "") + jt.getString("table"));
+					jtm.setJoin(data.getString("join-var"));
+
+					JSONArray fs = jt.getJSONObject("filters").getJSONArray(data.getString("join-filter"));
+					System.out.println(fs);
+					for (Object sobject : jt.getJSONArray("columns")) {
+						JSONObject sdata = (JSONObject) sobject;
+						if (!fs.contains(sdata.getString("name"))) continue;
+						System.out.println(sdata);
+
+						MetaColumn column = new MetaColumn();
+						column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
+						column.setName(data.getString("db-var"));
+						column.setObject(data);
+						jtm.getProperties().add(column);
+						
+
+//						def.getProperties().add(column);
+						
+					}
+					
+				}
+				else {
+					MetaColumn column = new MetaColumn();
+					column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
+					column.setName(data.getString("db-var"));
+					column.setObject(data);
+					def.getProperties().add(column);
+				}
+				
 			}
 			
 			queryString = this.generateQuery(metaTables);

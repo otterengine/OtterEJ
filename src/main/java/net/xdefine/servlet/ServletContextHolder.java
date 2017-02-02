@@ -21,7 +21,7 @@ public class ServletContextHolder {
 	
 	public static void removeInstance(int hashCode) {
 		_instance.remove(String.valueOf(hashCode));
-		System.out.println("instancesize :: " + _instance.size());
+		if (_instance.size() <= 0) _instance.clear();
 	}
 	
 	public static ServletContextHolder getInstance() {
