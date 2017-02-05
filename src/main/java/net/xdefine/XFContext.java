@@ -48,6 +48,13 @@ public class XFContext {
 			
 			String path = getClass().getResource("/xdefine.properties").getPath();
 			path = path.substring(0, path.lastIndexOf("/"));
+			path = path.replaceAll("%20", " ");
+			
+			if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+				path = path.substring(1);
+			}
+			
+			System.out.println(path);
 			
 			File dir = new File(path);
 			for (File file : dir.listFiles()) {
