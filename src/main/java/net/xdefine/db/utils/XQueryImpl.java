@@ -130,52 +130,39 @@ public abstract class XQueryImpl implements XQuery {
 			int i = 1;
 			MetaTable def = new MetaTable();
 			def.setUnique("_0x" + String.format("%02X%n", i).trim());
-			if (table.containsKey("catalog")) {
-				def.setName(table.getString("catalog") + "." + table.getString("table"));
-			}
-			else {
-				def.setName(table.getString("table"));
-			}
-			
+			def.setName((table.containsKey("catalog") ? (table.getString("catalog") + ".") : "") + table.getString("table"));
 			metaTables.add(def);
 			
 			for (Object object : table.getJSONArray("columns")) {
 				JSONObject data = (JSONObject) object;
-				
 				if (data.containsKey("join-table")) {
 					i++;
 					JSONObject jt = this.sessionFactory.entities.getJSONObject(data.getString("join-table"));
 					MetaTable jtm = new MetaTable();
+					jtm.setRefs(data.getString("name"));
 					jtm.setUnique("_0x" + String.format("%02X%n", i).trim());
-					jtm.setName((jt.containsKey("catalog") ? (table.getString("catalog") + ".") : "") + jt.getString("table"));
-					jtm.setJoin(data.getString("join-var"));
+					jtm.setName((jt.containsKey("catalog") ? (jt.getString("catalog") + ".") : "") + jt.getString("table"));
+					jtm.setJoin(jtm.getUnique() + "." + data.getString("join-var") + " = " + def.getUnique() + "." + data.getString("db-var"));
 
 					JSONArray fs = jt.getJSONObject("filters").getJSONArray(data.getString("join-filter"));
-					System.out.println(fs);
 					for (Object sobject : jt.getJSONArray("columns")) {
 						JSONObject sdata = (JSONObject) sobject;
 						if (!fs.contains(sdata.getString("name"))) continue;
-						System.out.println(sdata);
 
 						MetaColumn column = new MetaColumn();
-						column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
-						column.setName(data.getString("db-var"));
-						column.setObject(data);
+						column.setAlias(jtm.getUnique().trim() + "_" + sdata.getString("name"));
+						column.setName(sdata.getString("db-var"));
+						column.setObject(sdata);
 						jtm.getProperties().add(column);
-						
-
-//						def.getProperties().add(column);
-						
 					}
-					
+					metaTables.add(jtm);
 				}
-				else {
-					MetaColumn column = new MetaColumn();
-					column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
-					column.setName(data.getString("db-var"));
-					column.setObject(data);
-					def.getProperties().add(column);
-				}
+				
+				MetaColumn column = new MetaColumn();
+				column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
+				column.setName(data.getString("db-var"));
+				column.setObject(data);
+				def.getProperties().add(column);
 				
 			}
 			
@@ -201,6 +188,8 @@ public abstract class XQueryImpl implements XQuery {
 				}
 			}
 			rs.close();
+			
+			
 			return result;
 		}
 		catch(Exception ex) {

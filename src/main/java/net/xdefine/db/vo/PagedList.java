@@ -15,7 +15,6 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 
 	public PagedList() {
 	}
-	
 
 	public PagedList(List<T> selectList) {
 		this.addAll(selectList);
@@ -28,23 +27,31 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 	public Long getMin() {
 		return min;
 	}
-	
+
 	public Long getPrevpage() {
-		return (long) ((page == 1) ? 1 : page - 1);
+		try {
+			return (long) ((page == 1) ? 1 : page - 1);
+		} catch (Exception ex) {
+			return -1L;
+		}
 	}
 
 	public Long getNextpage() {
-		return (page + 1 >= lastpage) ? lastpage : page + 1;
+		try {
+			return (page + 1 >= lastpage) ? lastpage : page + 1;
+		} catch (Exception ex) {
+			return -1L;
+		}
 	}
 
 	public Long getLastpage() {
 		return lastpage;
 	}
-	
+
 	public void setList(List<T> list) {
 		this.addAll(list);
 	}
-	
+
 	public long getRowSize() {
 		return rowSize;
 	}
@@ -58,7 +65,8 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 
 	private void setPageRange(long page, long pageSize) {
 
-		if (pageSize == 0) pageSize = 1;
+		if (pageSize == 0)
+			pageSize = 1;
 		this.lastpage = pageSize;
 
 		// page 표시
@@ -86,20 +94,20 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 				max = page + 3 + value;
 			}
 		}
-		
+
 		this.min = min;
 		this.max = max;
-				
+
 	}
 
 	public Integer getPage() {
 		return page;
 	}
-	
+
 	public Integer getLimit() {
 		return limit;
 	}
-	
+
 	public long getPageGap() {
 		return this.rowSize - ((this.page - 1) * this.limit);
 	}
@@ -111,7 +119,7 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 			this.setPageRange(this.page, (long) Math.ceil((float) this.rowSize / this.limit));
 		}
 	}
-	
+
 	public long number(int n) {
 		return this.rowSize - ((this.page - 1) * this.limit) - n;
 	}
@@ -119,11 +127,10 @@ public class PagedList<T> extends ArrayList<T> implements List<T> {
 	public long getStart() {
 		return 1 + ((page - 1) * limit);
 	}
-	
+
 	public long getEnd() {
 		long end = (page * limit);
 		return (end > this.rowSize ? this.rowSize : end);
 	}
-
 
 }
