@@ -5,10 +5,19 @@ import java.util.List;
 
 public class MetaTable {
 
+	private String refs;
 	private String name;
 	private String unique;
 	private String join;
 	private List<MetaColumn> properties = new ArrayList<MetaColumn>();
+
+	public String getRefs() {
+		return refs;
+	}
+
+	public void setRefs(String refs) {
+		this.refs = refs;
+	}
 
 	public String getName() {
 		return name;

@@ -38,48 +38,64 @@ public class XQueryForMySQL extends XQueryImpl {
 		Map<String, JSONObject> fieldObjects = new HashMap<String, JSONObject>();
 		
 		StringBuilder fields = new StringBuilder();
-		for (MetaColumn field : def.getProperties()) {
-			if (!fields.toString().isEmpty()) fields.append(", ");
-			
-			if (field.getName().startsWith("(")) {
-				fields.append(field.getName() + " " + field.getAlias());
+		for (MetaTable t : metadatas) {
+			for (MetaColumn field : t.getProperties()) {
+				if (!fields.toString().isEmpty()) fields.append(", ");
 				
+				if (field.getName().startsWith("(")) {
+					fields.append(field.getName() + " " + field.getAlias());
+				}
+				else {
+					fields.append(t.getUnique().trim() + ".`" + field.getName() + "` " + field.getAlias());
+				}
+				
+				String alias = field.getAlias().substring(t.getUnique().trim().length() + 1);
+				if (t != def) {
+					alias = t.getRefs() + "." + alias;
+				}
+				field.getObject().put("unique", t.getUnique());
+				fieldObjects.put(alias, field.getObject());
 			}
-			else {
-				fields.append(def.getUnique().trim() + ".`" + field.getName() + "` " + field.getAlias());
-			}
-			
-			
-			String alias = field.getAlias().substring(def.getUnique().trim().length() + 1);
-			fieldObjects.put(alias, field.getObject());
 		}
 		
 		Pattern p = Pattern.compile("\\$\\{([a-zA-Z0-9\\-\\_\\.]*)\\}");
+
+		StringBuilder sbTables = new StringBuilder();
+		sbTables.append(def.getName() + " " + def.getUnique().trim());
+		
+		if (metadatas.size() > 1) {
+			for (int n = 1; n < metadatas.size(); n++) {
+				MetaTable tb = metadatas.get(n);
+				sbTables.append(" LEFT JOIN " + tb.getName() + " " + tb.getUnique().trim());
+				sbTables.append(" ON " + tb.getJoin() + " ");
+			}
+		}
+
 		
 		StringBuilder options = new StringBuilder();
 		for (Criterion criterion : criterions) {
 			options.append((!options.toString().isEmpty()) ? " AND " : " WHERE ");
 			
-			boolean success = true;
 			QueryObject sub = criterion.toSQLString();
 			String query = sub.getQuery();
 			Matcher m = p.matcher(query);
 			while(m.find()) {
+				
 				if (!fieldObjects.containsKey(m.group(1).trim())){
-					System.out.println(m.group(1));
-					success = false;
-					continue;
+					throw new IllegalStateException("not found Field : " + m.group(1).trim());
 				}
+				
 				JSONObject field = fieldObjects.get(m.group(1).trim());
-				query = query.replaceAll("\\$\\{" + m.group(1).trim() + "\\}", field.getString("db-var"));
+				System.out.println(field);
+				query = query.replaceAll("\\$\\{" + m.group(1).trim() + "\\}", field.getString("unique") + "." + field.getString("db-var"));
 			}
-			if (success) {
-				object.getData().addAll(sub.getData());
-				options.append(query);
-			}
+		
+			object.getData().addAll(sub.getData());
+			options.append(query);
 		}
 		
-		object.setQuery("SELECT " + fields.toString() + " FROM " + def.getName() + " " + def.getUnique().trim() + options);
+		object.setQuery("SELECT " + fields.toString() + " FROM " + sbTables.toString() + options);
+		
 		return object;
 	}
 
