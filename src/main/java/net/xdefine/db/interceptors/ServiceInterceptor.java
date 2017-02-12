@@ -36,7 +36,6 @@ public class ServiceInterceptor implements InitializingBean {
 			throw ex;
 		}
 		finally {
-			System.out.println("finally");
 			if (session != null) {
 				session.close();
 				session = null;

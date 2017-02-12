@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +52,11 @@ public class XSessionFactoryImpl implements XSessionFactory {
 			XPath xpath = XPathFactory.newInstance().newXPath();
 
 			ClassLoader classLoader = getClass().getClassLoader();
-			File tables = new File(classLoader.getResource("xdefine/tables").getFile());
+			String tablesPath = classLoader.getResource("xdefine/tables").getPath();
+			tablesPath = URLDecoder.decode(tablesPath, "UTF-8");
+			if (System.getProperty("os.name").toLowerCase().contains("windows")) tablesPath = tablesPath.substring(1);
+
+			File tables = new File(tablesPath);
 			for (File table : tables.listFiles()) {
 				
 				JSONObject jTable = new JSONObject();

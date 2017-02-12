@@ -86,7 +86,6 @@ public class XQueryForMySQL extends XQueryImpl {
 				}
 				
 				JSONObject field = fieldObjects.get(m.group(1).trim());
-				System.out.println(field);
 				query = query.replaceAll("\\$\\{" + m.group(1).trim() + "\\}", field.getString("unique") + "." + field.getString("db-var"));
 			}
 		

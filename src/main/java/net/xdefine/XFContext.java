@@ -1,6 +1,7 @@
 package net.xdefine;
 
 import java.io.File;
+import java.net.URLDecoder;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
@@ -45,18 +46,13 @@ public class XFContext {
 			logger.info(" ");
 			
 			Properties p = new Properties();
+
+			String propPath = getClass().getResource("/xdefine.properties").getPath();
+			propPath = propPath.substring(0, propPath.lastIndexOf("/"));
+			propPath = URLDecoder.decode(propPath, "UTF-8");
+			if (System.getProperty("os.name").toLowerCase().contains("windows")) propPath = propPath.substring(1);
 			
-			String path = getClass().getResource("/xdefine.properties").getPath();
-			path = path.substring(0, path.lastIndexOf("/"));
-			path = path.replaceAll("%20", " ");
-			
-			if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-				path = path.substring(1);
-			}
-			
-			System.out.println(path);
-			
-			File dir = new File(path);
+			File dir = new File(propPath);
 			for (File file : dir.listFiles()) {
 				if (file.isDirectory() || !file.getName().endsWith(".properties")) continue;
 				p.load(getClass().getResourceAsStream("/" + file.getName()));
