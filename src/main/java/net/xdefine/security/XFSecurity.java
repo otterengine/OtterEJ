@@ -42,7 +42,6 @@ public abstract class XFSecurity {
        	if (principal != null) {
        		// ID 가져온 뒤 처리 방식.
        		if (!this.matches(password, principal.getPassword())) {
-       			System.out.println("not matched password.");
        			throw new BadCredentialsException("Not matched Password.");
        		}
        	}

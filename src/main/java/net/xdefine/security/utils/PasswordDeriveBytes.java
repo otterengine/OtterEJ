@@ -162,8 +162,6 @@ public class PasswordDeriveBytes {
 			if (hashnumber == 0) {
 				// last iteration on output
 				output2 = hash.digest(output);
-				// System.out.println("0: initial: " + new
-				// String(org.bouncycastle.util.encoders.Hex.encode(output2)).toUpperCase());
 			} else if (hashnumber < 1000) {
 				byte[] n = Integer.toString(hashnumber).getBytes();
 				output2 = new byte[output.length + n.length];
@@ -173,8 +171,6 @@ public class PasswordDeriveBytes {
 				System.arraycopy(output, 0, output2, n.length, output.length);
 				// don't update output
 				output2 = hash.digest(output2);
-				// System.out.println(hashnumber + " output2: " + new
-				// String(org.bouncycastle.util.encoders.Hex.encode(output2)).toUpperCase());
 			} else {
 				throw new SecurityException("too long");
 			}
@@ -182,8 +178,6 @@ public class PasswordDeriveBytes {
 			int rem = output2.length - position;
 			int l = Math.min(cb - cpos, rem);
 			System.arraycopy(output2, position, result, cpos, l);
-			// System.out.println("result:\t\t" + new
-			// String(org.bouncycastle.util.encoders.Hex.encode(result)).toUpperCase());
 			cpos += l;
 			position += l;
 			while (position >= output2.length) {
@@ -208,10 +202,6 @@ public class PasswordDeriveBytes {
 			byte[] secondBaseOutput = new byte[(firstBaseOutput.length + result.length)];
 			System.arraycopy(firstBaseOutput, 0, secondBaseOutput, 0, firstBaseOutput.length);
 			System.arraycopy(result, 0, secondBaseOutput, firstBaseOutput.length, result.length);
-			// System.out.println("skip:\t\t" + skip);
-			// System.out.println("secondBaseOutput:\t" + new
-			// String(org.bouncycastle.util.encoders.Hex.encode(secondBaseOutput)).toUpperCase());
-
 			System.arraycopy(secondBaseOutput, skip, result, 0, skip);
 
 			skip = 0;

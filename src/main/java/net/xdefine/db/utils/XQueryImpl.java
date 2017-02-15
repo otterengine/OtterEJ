@@ -71,9 +71,6 @@ public abstract class XQueryImpl implements XQuery {
 			List<MetaTable> metas = new ArrayList<MetaTable>();
 			JSONObject table = this.sessionFactory.entities.getJSONObject(this.args);
 			
-			
-			System.out.println(table);
-			
 			int i = 1;
 			MetaTable def = new MetaTable();
 			def.setUnique("_0x" + String.format("%02X%n", i).trim());
@@ -88,8 +85,6 @@ public abstract class XQueryImpl implements XQuery {
 			
 			for (Object object : table.getJSONArray("columns")) {
 				JSONObject data = (JSONObject) object;
-				
-				System.out.println(data);
 				
 				MetaColumn column = new MetaColumn();
 				column.setAlias(def.getUnique().trim() + "_" + data.getString("name"));
