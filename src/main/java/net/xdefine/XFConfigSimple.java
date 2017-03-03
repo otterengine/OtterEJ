@@ -50,6 +50,8 @@ public abstract class XFConfigSimple implements ApplicationContextAware {
 				}
 			}
 			
+			System.out.println(names);
+			
 			ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 			messageSource.setDefaultEncoding("UTF-8");
 			if (names.size() > 0) {

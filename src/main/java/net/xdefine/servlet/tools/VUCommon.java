@@ -2,10 +2,8 @@ package net.xdefine.servlet.tools;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,32 +60,20 @@ public class VUCommon {
 
 		try {
 			
-			String langcode;
-			Map<String, String> allowLanguage = new HashMap<String, String>();
-			allowLanguage.put("zh-CN", "zh-CN");
-			allowLanguage.put("zh-TW", "zh-TW");
-			allowLanguage.put("ko-KR", "ko-KR");
-			allowLanguage.put("cn", "zh-CN");
-			allowLanguage.put("tw", "zh-TW");
-			allowLanguage.put("ko", "ko-KR");
-			
+			Locale locale = null;
 			try {
-				langcode = acceptLang.substring(0, 2);
-				if (allowLanguage.containsKey(langcode)) langcode = allowLanguage.get(langcode);
-				if (allowLanguage.containsKey(acceptLang)) langcode = allowLanguage.get(acceptLang);
-				
-				if (!allowLanguage.containsKey(langcode)) throw new Exception();
+				locale = Locale.forLanguageTag(acceptLang.substring(0, 2));
 			} 
 			catch (Exception ex) {
-				langcode = "zh-CN";
+				locale = Locale.getDefault();
 			}
 
 			String id = org.apache.commons.lang.StringUtils.join(ids, ".");
-			return messageSource.getMessage(id, new String[] {}, "", Locale.forLanguageTag(langcode));
+			return messageSource.getMessage(id, new String[] {}, "", locale);
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
-			return "";
+			return org.apache.commons.lang.StringUtils.join(ids, ".");
 		}
 		
 	}
