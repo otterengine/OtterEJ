@@ -4,11 +4,13 @@ import java.util.Map;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import net.xdefine.XFContext;
 import net.xdefine.tools.threads.MailThread;
 
+@Component
 public class SMTPMailSender {
 	
 	private JavaMailSender javaMailSender;
