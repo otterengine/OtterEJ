@@ -37,7 +37,14 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 				for (String path : maps.keySet()) {
 					Matcher m = Pattern.compile(path).matcher(url);
 					if (m.matches() && !VUSecurity.anyGranted(maps.get(path))) {
-						request.getSession().setAttribute("_securl", url);
+						
+						String qs = request.getQueryString();
+						if (qs != null && !qs.isEmpty()) 
+							qs = "?" + qs;
+						else 
+							qs = "";
+						
+						request.getSession().setAttribute("_securl", url + qs);
 						response.setStatus(302);
 						response.setHeader("Location", request.getContextPath() + XFContext.getProperty("webapp.security.login_page"));
 						ServletContextHolder.removeInstance(Thread.currentThread().hashCode());
