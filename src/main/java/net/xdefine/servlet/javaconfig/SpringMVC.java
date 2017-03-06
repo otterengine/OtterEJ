@@ -44,12 +44,12 @@ import net.xdefine.tools.services.AttachFileContext;
 public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
 	private ApplicationContext context;
-	
+
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.context = applicationContext;
 	}
-	
+
 	@Bean
 	public AttachFileContext fileContext() {
 		return new AttachFileContext();
@@ -64,10 +64,10 @@ public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationCon
 	public AuthorizeController authorizeController() {
 		try {
 			Object o = context.getBean(XFSecurity.class);
-			if (o == null) throw new Exception();
+			if (o == null)
+				throw new Exception();
 			return new AuthorizeController();
-		}
-		catch(Exception ex) {
+		} catch (Exception ex) {
 			return null;
 		}
 	}
@@ -80,25 +80,34 @@ public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationCon
 		taskExecutor.setQueueCapacity(128);
 		return taskExecutor;
 	}
-	
+
 	@Bean
 	public JavaMailSender javaMailSender() {
 
-		Properties properties = new Properties();
-		for(Object key : XFContext.keySet()) {
-			if (!key.toString().startsWith("webapp.mail.smtp.")) continue;
-			String rkey = key.toString().substring(key.toString().indexOf(".") + 1);
-			properties.put(rkey, XFContext.getProperty(key.toString()).trim());
+		if (XFContext.getProperty("webapp.mail.port") != null && !XFContext.getProperty("webapp.mail.port").isEmpty()) {
+
+			Properties properties = new Properties();
+			for (Object key : XFContext.keySet()) {
+				if (!key.toString().startsWith("webapp.mail.smtp."))
+					continue;
+				String rkey = key.toString().substring(key.toString().indexOf(".") + 1);
+				properties.put(rkey, XFContext.getProperty(key.toString()).trim());
+			}
+
+			JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+			mailSender.setHost(XFContext.getProperty("webapp.mail.host"));
+			mailSender.setPort(Integer.parseInt(XFContext.getProperty("webapp.mail.port")));
+			mailSender.setProtocol(XFContext.getProperty("webapp.mail.protocol"));
+			mailSender.setUsername(XFContext.getProperty("webapp.mail.username"));
+			mailSender.setPassword(XFContext.getProperty("webapp.mail.password"));
+			mailSender.setJavaMailProperties(properties);
+
+			return mailSender;
+		} else {
+			return null;
 		}
-		
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setUsername(XFContext.getProperty("webapp.mail.username"));
-		mailSender.setPassword(XFContext.getProperty("webapp.mail.password"));
-		mailSender.setJavaMailProperties(properties);
-		
-		return mailSender;
 	}
-	
+
 	@Bean
 	public SMTPMailSender mailSender() {
 		SMTPMailSender sender = new SMTPMailSender();
@@ -106,15 +115,14 @@ public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationCon
 		sender.setVelocityEngine((VelocityEngine) context.getBean("velocityEngine"));
 		return sender;
 	}
-	
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		
+
 		RequestInterceptor interceptor = new RequestInterceptor();
 		try {
 			interceptor.setSecurity(context.getBean(XFSecurity.class));
-		}
-		catch(Exception ex) {
+		} catch (Exception ex) {
 			interceptor.setSecurity(null);
 		}
 		registry.addInterceptor(interceptor);
@@ -125,33 +133,28 @@ public class SpringMVC extends WebMvcConfigurerAdapter implements ApplicationCon
 		}
 
 	}
-	
+
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
 		try {
-			
+
 			ServletContext servletContext = context.getBean(ServletContext.class);
 			File dir = new File(servletContext.getRealPath("/"));
-			
+
 			for (File file : dir.listFiles()) {
 				String name = file.getName();
-				if (name.toLowerCase().endsWith("-inf") || name.isEmpty()) continue;
-				
+				if (name.toLowerCase().endsWith("-inf") || name.isEmpty())
+					continue;
+
 				if (file.isDirectory()) {
 					registry.addResourceHandler("/" + name + "/**").addResourceLocations("/" + name + "/");
-				}
-				else {
+				} else {
 					registry.addResourceHandler("/" + name).addResourceLocations("/" + name);
 				}
 			}
-		}
-		catch(Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
-	
-	
-
-	
 
 }
