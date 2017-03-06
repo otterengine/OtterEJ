@@ -24,6 +24,7 @@ public class HttpClient {
 			HttpURLConnection con = (HttpURLConnection) fbURL.openConnection();
 			con.setDoInput(true);
 			con.setRequestMethod("GET");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
 			con.setDoOutput(true);
 			if (timeout > 0) con.setReadTimeout(timeout);
 			con.setUseCaches(false);
@@ -76,6 +77,7 @@ public class HttpClient {
 			HttpURLConnection con = (HttpURLConnection) fbURL.openConnection();
 			con.setDoInput(true);
 			con.setRequestProperty("Authorization", header);
+			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
 			con.setRequestMethod("GET");
 			if (timeout > 0) con.setReadTimeout(timeout);
 			con.setDoOutput(true);
@@ -119,6 +121,7 @@ public class HttpClient {
 			HttpURLConnection con = (HttpURLConnection) fbURL.openConnection();
 			con.setDoInput(true);
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
 			con.setRequestMethod("POST");
 			con.setDoOutput(true);
 			if (timeout > 0) con.setReadTimeout(timeout);
