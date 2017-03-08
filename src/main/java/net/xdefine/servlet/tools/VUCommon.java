@@ -54,17 +54,30 @@ public class VUCommon {
 
 		ServletContextHolder sch = ServletContextHolder.getInstance();
 		HttpServletRequest request = sch.getRequest();
-
-		String al = request.getHeader("Accept-Language");
-		String acceptLang = (al == null || al.isEmpty()) ? "" : al.substring(0, 2);
+		
+		String al = sch.getCookieHelper().getCookie("_xd_lang");
+		if (al == null || al.isEmpty()) al = request.getHeader("Accept-Language");
+		
+		String acceptLang = al == null ? Locale.getDefault().toString() : al;
+		if (acceptLang.contains(",")) {
+			acceptLang = acceptLang.substring(acceptLang.indexOf(","));
+		}
+		else if (acceptLang.contains(";")) {
+			acceptLang = acceptLang.substring(acceptLang.indexOf(";"));
+		}
+		
+		if (acceptLang.length() > 5) {
+			acceptLang = acceptLang.substring(0, 5);
+		}
 
 		try {
 			
 			Locale locale = null;
 			try {
-				locale = Locale.forLanguageTag(acceptLang.substring(0, 2));
+				locale = Locale.forLanguageTag(acceptLang);
 			} 
 			catch (Exception ex) {
+				ex.printStackTrace();
 				locale = Locale.getDefault();
 			}
 
