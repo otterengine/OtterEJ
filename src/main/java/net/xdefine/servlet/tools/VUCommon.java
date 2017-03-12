@@ -49,9 +49,8 @@ public class VUCommon {
 		if (b == null) return b;
 		return String.format(b, args);
 	}
-
-	public String getMsg(Object[] ids) {
-
+	
+	public String getCurrentLocale() {
 		ServletContextHolder sch = ServletContextHolder.getInstance();
 		HttpServletRequest request = sch.getRequest();
 		
@@ -60,17 +59,26 @@ public class VUCommon {
 		
 		String acceptLang = al == null ? Locale.getDefault().toString() : al;
 		if (acceptLang.contains(",")) {
-			acceptLang = acceptLang.substring(acceptLang.indexOf(","));
+			acceptLang = acceptLang.substring(0, acceptLang.indexOf(","));
 		}
 		else if (acceptLang.contains(";")) {
-			acceptLang = acceptLang.substring(acceptLang.indexOf(";"));
+			acceptLang = acceptLang.substring(0, acceptLang.indexOf(";"));
 		}
 		
 		if (acceptLang.length() > 5) {
 			acceptLang = acceptLang.substring(0, 5);
 		}
+		
+		return acceptLang;
+	}
 
+	public String getMsg(String key) {
+		return this.getMsg(new String[]{ key });
+	}
+	
+	public String getMsg(Object[] ids) {
 		try {
+			String acceptLang = this.getCurrentLocale();
 			
 			Locale locale = null;
 			try {
@@ -88,7 +96,6 @@ public class VUCommon {
 			ex.printStackTrace();
 			return org.apache.commons.lang.StringUtils.join(ids, ".");
 		}
-		
 	}
 	
 	public String num(long num, int digit) {
