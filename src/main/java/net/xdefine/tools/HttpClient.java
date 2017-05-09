@@ -154,7 +154,7 @@ public class HttpClient {
 		
 		HttpResult result = new HttpResult();
 		
-		boolean isText = con.getContentType().contains("text/") || con.getContentType().contains("application/");
+		boolean isText = con.getContentType() != null && (con.getContentType().contains("text/") || con.getContentType().contains("application/"));
 
 		InputStream in;
 		if (con.getResponseCode() >= 400) {
