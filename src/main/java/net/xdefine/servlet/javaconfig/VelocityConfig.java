@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.velocity.VelocityConfigurer;
 
 import net.xdefine.XFContext;
@@ -52,8 +54,11 @@ public class VelocityConfig implements ApplicationContextAware {
 	
 	@Bean
 	public VelocityConfigurer velocityConfig() {
+		String path = XFContext.getProperty("webapp.view.path");
+		if (path == null || path.isEmpty()) path = "/WEB-INF/views/";
+
 		VelocityConfigurer configurer = new VelocityConfigurer();
-		configurer.setResourceLoaderPath("/WEB-INF/views/");
+		configurer.setResourceLoaderPath(path);
 		Properties props = new Properties();
 		props.put("resource.loader", "file");
 		props.put("input.encoding", "utf-8");
@@ -65,8 +70,11 @@ public class VelocityConfig implements ApplicationContextAware {
 
 	@Bean
 	public VelocityEngineFactoryBean velocityEngine() throws VelocityException, IOException {
+		String path = XFContext.getProperty("webapp.view.path");
+		if (path == null || path.isEmpty()) path = "/WEB-INF/views/";
+		
 		VelocityEngineFactoryBean factory = new VelocityEngineFactoryBean();
-		factory.setResourceLoaderPath("/WEB-INF/views/");
+		factory.setResourceLoaderPath(path);
 		Properties props = new Properties();
 		props.put("resource.loader", "file");
 		props.put("input.encoding", "utf-8");
@@ -78,36 +86,56 @@ public class VelocityConfig implements ApplicationContextAware {
 
 	@Bean
 	public ViewResolver viewResolver() {
-
-		VMLViewResolver resolver = new VMLViewResolver();
-		resolver.setCache(true);
-		resolver.setSuffix(".vm");
-		resolver.setContentType("text/html; charset=UTF-8");
-		resolver.setExposeSpringMacroHelpers(true);
-		resolver.setViewClass(VMToolboxView.class);
-		resolver.setToolboxConfigLocation("/WEB-INF/views/tools.xml");
-
-		Map<String, Object> attributes = new HashMap<String, Object>();
-
-		Reflections reflections = new Reflections(XFContext.getProperty("rsengine.package"));
-		Set<Class<?>> subTypes = reflections.getTypesAnnotatedWith(ViewHelper.class);
-		for (Class<?> subType : subTypes) {
-			ViewHelper anno = (ViewHelper) subType.getAnnotation(ViewHelper.class);
-			attributes.put(anno.name(), context.getBean(subType));
-		}
 		
-		attributes.put("sec", context.getBean(VUSecurity.class));
-		attributes.put("html", context.getBean(VUHtmlTag.class));
-		attributes.put("str", context.getBean(VUCommon.class));
+		String path = XFContext.getProperty("webapp.view.path");
+		if (path == null || path.isEmpty()) path = "/WEB-INF/views/";
+		
+		String engine = XFContext.getProperty("webapp.view.engine");
+		if (engine == null) engine = "vml";
+		if (engine.equals("jsp")) {
 
-		resolver.setAttributesMap(attributes);
+			InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+			viewResolver.setViewClass(JstlView.class);
+			viewResolver.setPrefix(path);
+			viewResolver.setSuffix("." + engine);
+			viewResolver.setOrder(100);
+			return viewResolver;
+		}
+		else {
+			
 
-		Map<String, String> mappings = new HashMap<String, String>();
-		mappings.put("admin/*", "shared/layout.admin.vm");
-		mappings.put("*", "shared/layout.default.vm");
-		resolver.setMappings(mappings);
+			VMLViewResolver resolver = new VMLViewResolver();
+			resolver.setCache(true);
+			resolver.setSuffix(".vm");
+			resolver.setContentType("text/html; charset=UTF-8");
+			resolver.setExposeSpringMacroHelpers(true);
+			resolver.setViewClass(VMToolboxView.class);
+			resolver.setToolboxConfigLocation("/WEB-INF/views/tools.xml");
 
-		return resolver;
+			Map<String, Object> attributes = new HashMap<String, Object>();
+
+			Reflections reflections = new Reflections(XFContext.getProperty("rsengine.package"));
+			Set<Class<?>> subTypes = reflections.getTypesAnnotatedWith(ViewHelper.class);
+			for (Class<?> subType : subTypes) {
+				ViewHelper anno = (ViewHelper) subType.getAnnotation(ViewHelper.class);
+				attributes.put(anno.name(), context.getBean(subType));
+			}
+			
+			attributes.put("sec", context.getBean(VUSecurity.class));
+			attributes.put("html", context.getBean(VUHtmlTag.class));
+			attributes.put("str", context.getBean(VUCommon.class));
+
+			resolver.setAttributesMap(attributes);
+
+			Map<String, String> mappings = new HashMap<String, String>();
+			mappings.put("admin/*", "shared/layout.admin.vm");
+			mappings.put("*", "shared/layout.default.vm");
+			resolver.setMappings(mappings);
+
+			return resolver;
+			
+		}
+
 	}
 	
 
