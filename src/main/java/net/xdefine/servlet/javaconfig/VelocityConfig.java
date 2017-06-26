@@ -98,7 +98,6 @@ public class VelocityConfig implements ApplicationContextAware {
 			viewResolver.setViewClass(JstlView.class);
 			viewResolver.setPrefix(path);
 			viewResolver.setSuffix("." + engine);
-			viewResolver.setOrder(100);
 			return viewResolver;
 		}
 		else {

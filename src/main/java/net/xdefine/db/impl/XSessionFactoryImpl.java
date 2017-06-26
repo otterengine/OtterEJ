@@ -134,7 +134,7 @@ public class XSessionFactoryImpl implements XSessionFactory {
 	}
 
 	@Override
-	public XSession getCurrentSession() {
+	public XSession openSession() {
 		return this.getCurrentSession(DEFAULT);
 	}
 

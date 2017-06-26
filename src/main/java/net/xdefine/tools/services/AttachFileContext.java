@@ -39,6 +39,12 @@ public class AttachFileContext {
 
 		File dir = new File(XFContext.getProperty("webapp.file.path") + File.separator + index.getSavedPath());
 		if (!dir.isDirectory()) dir.mkdirs();
+		
+		if (!System.getProperty("os.name").contains("indows")) {
+            String[] cmd = new String[] { "chmod", "775", dir.getPath() };
+            Process process = Runtime.getRuntime().exec(cmd);
+            process.waitFor();
+		}
 
 		InputStream in = filedata.getInputStream();
 		OutputStream out = new BufferedOutputStream(new FileOutputStream(dir.toString() + File.separator + "source"));
@@ -76,6 +82,12 @@ public class AttachFileContext {
 
 		File dir = new File(XFContext.getProperty("webapp.file.path") + File.separator + index.getSavedPath());
 		if (!dir.isDirectory()) dir.mkdirs();
+
+		if (!System.getProperty("os.name").contains("indows")) {
+            String[] cmd = new String[] { "chmod", "775", dir.getPath() };
+            Process process = Runtime.getRuntime().exec(cmd);
+            process.waitFor();
+		}
 		
 		HttpURLConnection con = (HttpURLConnection) imgURL.openConnection();
 		con.setDoInput(true);
@@ -131,6 +143,12 @@ public class AttachFileContext {
 
 		File dir = new File(XFContext.getProperty("webapp.file.path") + File.separator + index.getSavedPath());
 		if (!dir.isDirectory()) dir.mkdirs();
+
+		if (!System.getProperty("os.name").contains("indows")) {
+            String[] cmd = new String[] { "chmod", "775", dir.getPath() };
+            Process process = Runtime.getRuntime().exec(cmd);
+            process.waitFor();
+		}
 		
 		File to = new File(dir.toString() + File.separator + "source");
 		Files.copy(file, to);

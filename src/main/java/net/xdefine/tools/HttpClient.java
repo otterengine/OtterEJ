@@ -15,6 +15,12 @@ public class HttpClient {
 	
 	private static final int DEFUALT_TIMEOUT = 1000;
 	private static String userAgent = "";
+	private static String encode = "UTF-8";
+	
+	public static void setEncode(String enc) {
+		encode = enc;
+	}
+
 	public static void setUserAgent(String agent) {
 		userAgent = agent;
 	}
@@ -121,26 +127,11 @@ public class HttpClient {
 			con.setUseCaches(false);
 
 			OutputStream out = con.getOutputStream();
-			out.write( param.getBytes("UTF-8") );
+			out.write( param.getBytes(encode) );
 			out.flush();
 		    out.close();
 
-			InputStream in;
-			if (con.getResponseCode() >= 400) {
-				in = con.getErrorStream();
-				result.setSuccess(false);
-			}
-			else {
-				in = con.getInputStream();
-				result.setSuccess(true);
-			}
-
-			StringBuffer buffer = new StringBuffer();
-			byte[] b = new byte[4096];
-			for (int n; (n = in.read(b)) != -1;) buffer.append(new String(b, 0, n));
-
-			result.setStatus(con.getResponseCode());
-			result.setData(buffer.toString());
+			result = getResult(con, (url.contains(".json") || url.contains(".ajax")));
 		}
 		catch(Exception ex) {
 			result.setSuccess(false);
@@ -165,10 +156,15 @@ public class HttpClient {
 			in = con.getInputStream();
 			result.setSuccess(true);
 		}
+		
+		String enc = encode;
+		if (con.getContentType().contains("charset")) {
+			enc = con.getContentType().substring(con.getContentType().indexOf("charset=") + 8).trim();
+		}
 
 		StringBuffer buffer = new StringBuffer();
-		if (perLine|| isText) {
-			BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+		if (perLine || isText) {
+			BufferedReader br = new BufferedReader(new InputStreamReader(in, enc));
 
 			String line = "";
 			while ((line = br.readLine()) != null) buffer.append(line + "\n");

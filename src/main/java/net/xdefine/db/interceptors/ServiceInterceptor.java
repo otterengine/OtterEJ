@@ -24,7 +24,7 @@ public class ServiceInterceptor implements InitializingBean {
 	@Around(value = "@annotation(transactional)", argNames = "transactional")
     public Object proceed(ProceedingJoinPoint pjp, Transactional transactional) throws Throwable {
 		
-		XSession session = sessionFactory.getCurrentSession();
+		XSession session = sessionFactory.openSession();
 		session.setReadOnly(transactional.readOnly());
 		
 		try {
