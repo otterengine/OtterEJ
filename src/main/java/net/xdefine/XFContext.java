@@ -30,8 +30,6 @@ public class XFContext {
 	private XFContext() {
 		try {
 			
-			System.out.println("RELOAD...");
-			
 			logger.info("  ");
 			logger.info(" #############################################################");
 			logger.info("  ");

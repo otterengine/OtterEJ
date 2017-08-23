@@ -22,10 +22,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 public abstract class XFConfigSimple implements ApplicationContextAware {
 	
-	public XFConfigSimple() {
-		System.out.println("XFConfigSimple Init..");
-	}
-
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected ApplicationContext context;
 	
@@ -53,9 +49,7 @@ public abstract class XFConfigSimple implements ApplicationContextAware {
 					if (!names.contains(prefix + sep + name)) names.add(prefix + sep + name);
 				}
 			}
-			
-			System.out.println(" >> " + names);
-			
+						
 			ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 			messageSource.setDefaultEncoding("UTF-8");
 			if (names.size() > 0) {
