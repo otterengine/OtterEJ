@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import net.sf.json.JSONObject;
@@ -24,10 +25,12 @@ public class XFContext {
 	}
 
 	
-	private ReloadableResourceBundleMessageSource messageSource;
+	@Autowired private ReloadableResourceBundleMessageSource messageSource;
 	private JSONObject property;
 	private XFContext() {
 		try {
+			
+			System.out.println("RELOAD...");
 			
 			logger.info("  ");
 			logger.info(" #############################################################");

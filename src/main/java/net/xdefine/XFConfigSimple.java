@@ -21,6 +21,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableAsync
 @EnableWebMvc
 public abstract class XFConfigSimple implements ApplicationContextAware {
+	
+	public XFConfigSimple() {
+		System.out.println("XFConfigSimple Init..");
+	}
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected ApplicationContext context;
@@ -50,7 +54,7 @@ public abstract class XFConfigSimple implements ApplicationContextAware {
 				}
 			}
 			
-			System.out.println(names);
+			System.out.println(" >> " + names);
 			
 			ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 			messageSource.setDefaultEncoding("UTF-8");

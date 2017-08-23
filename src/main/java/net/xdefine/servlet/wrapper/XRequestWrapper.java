@@ -14,6 +14,24 @@ public class XRequestWrapper extends HttpServletRequestWrapper {
 		super(request);
 		this.header = header;
 	}
+	
+	
+
+	@Override
+	public String getProtocol() {
+		// TODO Auto-generated method stub
+		return super.getProtocol();
+	}
+
+
+
+	@Override
+	public String getScheme() {
+		// TODO Auto-generated method stub
+		return super.getScheme();
+	}
+
+
 
 	@Override
 	public String getRemoteAddr() {

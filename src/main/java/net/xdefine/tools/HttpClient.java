@@ -57,6 +57,7 @@ public class HttpClient {
 		HttpResult result = new HttpResult();
 		
 		try {
+			HttpURLConnection.setFollowRedirects(true);
 			HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
 			con.setDoInput(true);
 
