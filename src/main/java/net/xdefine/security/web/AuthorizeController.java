@@ -47,7 +47,6 @@ public class AuthorizeController {
 				String sessionid = request.getSession().getId();
 				CookieHelper cookie = new CookieHelper(request, response);
 				
-				
 				String pfx = XFContext.getProperty("webapp.security.prefix");
 				if (pfx == null) pfx = "";
 				

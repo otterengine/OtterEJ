@@ -3,6 +3,8 @@ package net.xdefine.servlet.utils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -14,11 +16,13 @@ public class CookieHelper {
 
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	private static Map<String, Cookie> _cookies = null;
 	
 	
 	public CookieHelper(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
+		if (_cookies == null) _cookies = new HashMap<String, Cookie>();
 	}
 	
 	public String getCookie(String key) {
@@ -36,9 +40,16 @@ public class CookieHelper {
 					cookie = item;
 					break;
 				}
-	
-			if(cookie == null) throw new Exception("not found cookie for " + key);
 			
+			if (cookie == null && _cookies != null) {
+				if (_cookies.containsKey(key)) {
+					cookie = _cookies.get(key);
+				}
+				else {
+					throw new Exception("not found cookie for " + key);
+				}
+			}
+	
 			String result = URLDecoder.decode(cookie.getValue(), "UTF-8");
 			if (result.startsWith("{AES}")) {
 				result = Hasher.decodeAES128(result.substring(5), "MOETCHAN");
@@ -55,6 +66,11 @@ public class CookieHelper {
 	}
 	
 	public void setCookie(String key, String value, int expiry) throws UnsupportedEncodingException {
+		this.setCookie(key, value, expiry, false);
+	}
+
+	
+	public void setCookie(String key, String value, int expiry, boolean secure) throws UnsupportedEncodingException {
 		
 		Cookie cookie = null;
 		Cookie[] cookies = request.getCookies();
@@ -71,11 +87,13 @@ public class CookieHelper {
 		if(cookie == null)  {
 			cookie = new Cookie(key, newValue);
 		}
-		
+
+		cookie.setSecure(secure);
 		cookie.setValue(newValue);
 		cookie.setPath("/");
 		cookie.setMaxAge(expiry);
 
 		response.addCookie(cookie);
+		_cookies.put(cookie.getName(), cookie);
 	}
 }

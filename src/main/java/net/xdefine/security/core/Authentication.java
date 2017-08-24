@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.xdefine.XFContext;
 import net.xdefine.security.core.userdetails.SignedDetails;
 import net.xdefine.security.utils.Hasher;
 
@@ -62,7 +63,7 @@ public class Authentication {
 			JSONObject object = new JSONObject();
 			object.put("name", name);
 			object.put("credentials", credentials);
-			return name + "{AES}" + Hasher.encodeAES128(object.toString(), name);
+			return name + "{AES}" + Hasher.encodeAES128(object.toString(), name + XFContext.getProperty("security.key"));
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
