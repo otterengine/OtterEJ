@@ -45,7 +45,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 					cookie.setCookie(pfx + "_xdsec_remember", "", -1);
 				}
 				else {
-					String sess = authentication.getCookieString(request.getRequestedSessionId());
+					String sess = authentication.getCookieString(request.getSession().getId());
 					cookie.setCookie(pfx + "_xdsec_details", sess, 60 * 30);
 				}
 			} 
