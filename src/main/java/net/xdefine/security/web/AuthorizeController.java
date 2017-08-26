@@ -56,6 +56,9 @@ public class AuthorizeController {
 				if (isRemember) {
 					cookie.setCookie(pfx + "_xdsec_remember", authentication.getRememberData(), 60 * 60 * 24 * 365);
 				}
+				else {
+					cookie.setCookie(pfx + "_xdsec_remember", "", -1);
+				}
 				
 				security.onAuthenticationSuccess(request, response, JSONObject.fromObject(Hasher.decodeAES128(sess, sessionid)));
 				
@@ -100,6 +103,7 @@ public class AuthorizeController {
 			
 			CookieHelper cookie = new CookieHelper(request, response);
 			cookie.setCookie(pfx + "_xdsec_details", "", -1);
+			cookie.setCookie(pfx + "_xdsec_remember", "", -1);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();

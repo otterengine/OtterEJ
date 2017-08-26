@@ -128,6 +128,7 @@ public class VelocityConfig implements ApplicationContextAware {
 
 			Map<String, String> mappings = new HashMap<String, String>();
 			mappings.put("admin/*", "shared/layout.admin.vm");
+			mappings.put("mobile/*", "shared/layout.mobile.vm");
 			mappings.put("*", "shared/layout.default.vm");
 			resolver.setMappings(mappings);
 
