@@ -50,7 +50,7 @@ public class AuthorizeController {
 				String pfx = XFContext.getProperty("webapp.security.prefix");
 				if (pfx == null) pfx = "";
 				
-				String sess = authentication.getCookieString(sessionid);
+				String sess = authentication.getCookieString(request, sessionid);
 				cookie.setCookie(pfx + "_xdsec_details", sess, 60 * 30);
 				
 				if (isRemember) {
