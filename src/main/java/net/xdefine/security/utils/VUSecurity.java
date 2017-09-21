@@ -10,13 +10,23 @@ import net.xdefine.servlet.ServletContextHolder;
 public class VUSecurity {
 
 	public static String getPrincipal() {
-		JSONObject object = ServletContextHolder.getInstance().getSecurityJSON();
-		return (object != null) ? object.getString("principal") : null;
+		try {
+			JSONObject object = ServletContextHolder.getInstance().getSecurityJSON();
+			return (object != null) ? object.getString("principal") : null;
+		} 
+		catch(Exception ex) {
+			return null;
+		}
 	}
 	
 	public static boolean isSigned() {
-		JSONObject object = ServletContextHolder.getInstance().getSecurityJSON();
-		return (object != null && object.has("principal")); 
+		try {
+			JSONObject object = ServletContextHolder.getInstance().getSecurityJSON();
+			return (object != null && object.has("principal")); 
+		}
+		catch(Exception ex) {
+			return false;
+		}
 	}
 
 	public static long getLong(String key) {

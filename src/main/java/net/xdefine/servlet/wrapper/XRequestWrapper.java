@@ -3,6 +3,7 @@ package net.xdefine.servlet.wrapper;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,8 +53,10 @@ public class XRequestWrapper extends HttpServletRequestWrapper {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Map getParameterMap() {
-		Map map = super.getParameterMap();
-		if (map == null) return null;
+		Map m = super.getParameterMap();
+		if (m == null) return null;
+
+		Map map = new HashMap(m);
 		for (Object o : map.keySet()) {
 			map.put(o, map.get(o).toString().replaceAll("<(no)?script[^>]*>.*?</(no)?script>", ""));
 		}
