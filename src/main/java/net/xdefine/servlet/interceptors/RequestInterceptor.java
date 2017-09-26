@@ -9,11 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import net.sf.json.JSONObject;
 import net.xdefine.XFContext;
 import net.xdefine.security.XFSecurity;
 import net.xdefine.security.core.Authentication;
-import net.xdefine.security.utils.Hasher;
 import net.xdefine.security.utils.VUSecurity;
 import net.xdefine.servlet.ServletContextHolder;
 import net.xdefine.servlet.utils.CookieHelper;
@@ -46,34 +44,14 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 			if (!VUSecurity.isSigned() && autoText != null && !autoText.isEmpty()) {
 				Authentication authentication = security.authenticate(autoText);
 				if (authentication == null) {
-					cookie.setCookie(pfx + "_xdsec_remember", "", -1, true);
+					cookie.setCookie(pfx + "_xdsec_remember", "", -1);
 				}
 				else {
 					String sess = authentication.getCookieString(request, sessionId);
-					cookie.setCookie(pfx + "_xdsec_details", sess, 60 * 30, true);
+					cookie.setCookie(pfx + "_xdsec_details", sess, 60 * 30);
 				}
 			}
 
-			if (VUSecurity.isSigned()) {
-
-				String str = cookie.getCookie(pfx + "_xdsec_details");
-				try {
-					String txt = Hasher.decodeAES128(str, sessionId);
-					JSONObject o = JSONObject.fromObject(txt);
-					if (o.getString("bip").equals(request.getRemoteAddr())) {
-						// 비정상적인 로그인인거같은데.. uip에 새로운게 들어왔어..
-					}
-					else if (!o.getString("uip").equals(request.getRemoteAddr())) {
-						// 현재 사용자가 아이피가 바뀐걸로 판단됨...
-						o.put("bip", o.getString("uip"));
-						o.put("uip", request.getRemoteAddr());
-					}
-				}
-				catch(Exception ex) {
-				}
-				cookie.setCookie(pfx + "_xdsec_details", str, 60 * 30, true);
-			}
-		
 			Map<String, String[]> maps = security.getSecurityPath();
 			for (String path : maps.keySet()) {
 				Matcher m = Pattern.compile(path).matcher(url);

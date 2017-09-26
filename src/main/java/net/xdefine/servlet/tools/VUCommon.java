@@ -156,7 +156,7 @@ public class VUCommon {
 		StringBuilder params = new StringBuilder();
 		String[] queries = request.getQueryString().split("&");
 		for (String query : queries) {
-			if (query.length() > 0 && arr != null && arr.size() > 0 && arr.contains(query.substring(0, query.indexOf("=")))) continue;
+			if (query.length() > 0 && arr != null && arr.size() > 0 && query.contains("=") && arr.contains(query.substring(0, query.indexOf("=")))) continue;
 			params.append("&" + query);
 		}
 		
