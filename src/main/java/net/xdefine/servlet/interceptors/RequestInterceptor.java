@@ -35,8 +35,6 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
 			String pfx = XFContext.getProperty("webapp.security.prefix");
 			if (pfx == null) pfx = "";			
-			
-			String sessionId = request.getSession().getId();
 
 			CookieHelper cookie = ServletContextHolder.getInstance().getCookieHelper();
 			String autoText = cookie.getCookie(pfx + "_xdsec_remember");
@@ -47,7 +45,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 					cookie.setCookie(pfx + "_xdsec_remember", "", -1);
 				}
 				else {
-					String sess = authentication.getCookieString(request, sessionId);
+					String sess = cookie.getCookie(pfx + "_xdsec_details");
 					cookie.setCookie(pfx + "_xdsec_details", sess, 60 * 30);
 				}
 			}
