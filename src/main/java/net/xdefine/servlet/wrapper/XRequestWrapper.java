@@ -26,7 +26,8 @@ public class XRequestWrapper extends HttpServletRequestWrapper {
 
 	@Override
 	public String getScheme() {
-		return super.getScheme();
+		String realProto = super.getHeader("X-Forwarded-Proto");
+		return realProto != null ? realProto : super.getScheme();
 	}
 
 	@Override
